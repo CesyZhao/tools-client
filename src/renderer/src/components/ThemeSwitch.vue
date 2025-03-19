@@ -1,8 +1,8 @@
 <template>
   <div class="theme-switch">
-    <button @click="toggleTheme">
-      {{ isDark ? '切换到亮色模式' : '切换到暗色模式' }}
-    </button>
+    <div @click="toggleTheme">
+      <i :class="`iconfont icon-${isDark ? 'dark' : 'light'}`"></i>
+    </div>
   </div>
 </template>
 
@@ -12,6 +12,7 @@ import { ref, onMounted } from 'vue'
 const isDark = ref(false)
 
 const toggleTheme = (): void => {
+  isDark.value = !isDark.value
   updateThemeClass()
 }
 
@@ -42,6 +43,7 @@ body {
 
 .theme-switch {
   padding: 10px;
+  cursor: pointer;
 }
 
 .theme-switch button {
