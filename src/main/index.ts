@@ -6,10 +6,12 @@ import icon from '../../resources/icon.png?asset'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1120,
+    height: 712,
     show: false,
     autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    transparent: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -21,7 +23,7 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  mainWindow.webContents.setWindowOpenHandler(details => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
