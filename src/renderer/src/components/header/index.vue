@@ -5,15 +5,15 @@
       <div class="app-name">Tools Client</div>
     </div>
     <div class="header-right">
-      <ThemeSwitch />
-      <LanguageSwitch />
+      <theme-switch />
+      <language-switch />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import ThemeSwitch from './ThemeSwitch.vue'
-import LanguageSwitch from './LanguageSwitch.vue'
+import ThemeSwitch from '@renderer/components/theme-switch/index.vue'
+import LanguageSwitch from '@renderer/components/language-switch/index.vue'
 </script>
 
 <style lang="less" scoped>
@@ -23,7 +23,7 @@ import LanguageSwitch from './LanguageSwitch.vue'
   height: 72px;
   width: 100%;
 
-  padding: 24px 16px 0;
+  padding: 12px 16px 0;
   .header-left {
     display: grid;
     grid-template-columns: 40px auto;
@@ -37,8 +37,8 @@ import LanguageSwitch from './LanguageSwitch.vue'
       font-size: 20px;
     }
     img {
-      width: 36px;
-      height: 36px;
+      width: 28px;
+      height: 28px;
     }
   }
   .header-right {

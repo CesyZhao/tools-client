@@ -34,35 +34,13 @@ onMounted(async () => {
 </script>
 
 <style>
-:root {
-  --bg-color: #ffffff;
-  --bg-color-1: #f5f5f5;
-  --text-color: #000000;
-}
-
-:root.dark {
-  --bg-color: #1a1a1a;
-  --bg-color-1: #262626;
-  --text-color: #ffffff;
-}
-
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--color-bg-1);
+  color: var(--color-text-1);
 }
 
 .theme-switch {
   padding: 10px;
-  cursor: pointer;
-}
-
-.theme-switch button {
-  margin-right: 10px;
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid var(--text-color);
-  background: var(--bg-color);
-  color: var(--text-color);
   cursor: pointer;
 }
 </style>

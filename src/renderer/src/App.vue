@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import Header from './components/Header.vue'
+import Header from '@renderer/components/header/index.vue'
 </script>
 
 <style lang="less" scoped>

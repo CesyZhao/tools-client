@@ -1,6 +1,6 @@
 import '@renderer/assets/main.css'
 import '@renderer/assets/icon/iconfont.css'
-import ThemedTooltip from './components/ThemedTooltip.vue'
+import ThemedTooltip from '@renderer/components/themed-tooltip/index.vue'
 
 import { createApp } from 'vue'
 import App from './App.vue'
