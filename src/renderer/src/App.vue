@@ -1,9 +1,16 @@
 <template>
   <div class="app">
-    <ThemeSwitch />
+    <Header />
   </div>
 </template>
 
 <script setup lang="ts">
-import ThemeSwitch from './components/ThemeSwitch.vue'
+import Header from './components/Header.vue'
 </script>
+
+<style lang="less" scoped>
+#app {
+  display: flex;
+  flex-direction: column;
+}
+</style>
