@@ -22,7 +22,8 @@ import LanguageSwitch from '@renderer/components/language-switch/index.vue'
   grid-template-columns: auto 88px;
   height: 72px;
   width: 100%;
-
+  border-bottom: 1px solid var(--color-neutral-3);
+  box-shadow: 0 0 4px 0 var(--color-neutral-3);
   padding: 12px 16px 0;
   .header-left {
     display: grid;
