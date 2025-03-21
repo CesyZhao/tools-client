@@ -31,6 +31,16 @@
   --color-text: var(--ev-c-text-1);
 }
 
+:root {
+  --color-theme-1: #647eff;
+  --color-theme-2: #3d339b;
+}
+
+:root.dark {
+  --color-theme-1: #42d392;
+  --color-theme-2: #647eff;
+}
+
 *,
 *::before,
 *::after {

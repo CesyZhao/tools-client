@@ -1,82 +1,97 @@
 <template>
   <div class="menu-container">
-    <div class="menu-grid">
-      <a-card
-        v-for="item in menuItems"
-        :key="item.key"
-        class="menu-item"
-        :class="{ 'menu-item-active': item.active }"
-        hoverable
-        @click="handleMenuClick(item)"
-      >
-        <div class="menu-content">
-          <component :is="item.icon" size="28" />
-          <span class="menu-text">{{ item.title }}</span>
-        </div>
-      </a-card>
+    <div class="menu-grid" :class="{ selected: selectedKey }">
+      <themed-tooltip v-for="item in menuItems" :key="item.key" :content="$t(item.titleKey)">
+        <a-card
+          class="menu-item"
+          :class="{ 'menu-item-active': selectedKey === item.key }"
+          hoverable
+          @click="handleMenuClick(item)"
+        >
+          <div class="menu-content">
+            <i :class="`menu-icon iconfont icon-${item.icon}`"></i>
+            <span class="menu-text">{{ $t(item.titleKey) }}</span>
+          </div>
+        </a-card>
+      </themed-tooltip>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { IconEraser } from '@arco-design/web-vue/es/icon'
 
 interface MenuItem {
   key: string
-  title: string
-  icon: unknown
-  active?: boolean
+  titleKey: string
+  icon: string
   tag?: string
   tagColor?: string
 }
 
 const emit = defineEmits(['select'])
+const { selectedKey } = defineProps(['selectedKey'])
 
 const menuItems = ref<MenuItem[]>([
-  { key: 'enhance', title: '变清晰', icon: IconEraser, active: true },
-  { key: 'removeWatermark', title: 'AI去水印', icon: IconEraser },
-  { key: 'textReplace', title: '文字替换', icon: IconEraser },
-  { key: 'extractDraft', title: '提取线稿', icon: IconEraser },
-  { key: 'smartCrop', title: '智能抠图', icon: IconEraser },
-  { key: 'removeObject', title: '涂抹消除', icon: IconEraser },
-  { key: 'similarImage', title: 'AI相似图', icon: IconEraser },
-  { key: 'partialReplace', title: '局部替换', icon: IconEraser },
-  { key: 'styleTransfer', title: '风格转换', icon: IconEraser },
-  { key: 'backgroundReplace', title: '背景替换', icon: IconEraser },
-  { key: 'aiExpand', title: 'AI扩图', icon: IconEraser },
-  { key: 'aiPaint', title: 'AI重绘', icon: IconEraser, tag: '内测', tagColor: '#165DFF' }
+  { key: 'addText', titleKey: 'menu.addText', icon: 'tianjiawenzi' },
+  { key: 'imageRecognition', titleKey: 'menu.imageRecognition', icon: 'tupianshibie' },
+  { key: 'extractText', titleKey: 'menu.extractText', icon: 'tiquwenzi' },
+  { key: 'removeBackground', titleKey: 'menu.removeBackground', icon: 'mosaic' },
+  { key: 'imageCompletion', titleKey: 'menu.imageCompletion', icon: 'beijing-tihuanbeijing' },
+  { key: 'imageGeneration', titleKey: 'menu.imageGeneration', icon: 'tupianshengcheng' }
 ])
 
 const handleMenuClick = (item: MenuItem): void => {
-  menuItems.value.forEach(i => (i.active = i.key === item.key))
   emit('select', item)
 }
 </script>
 
 <style lang="less" scoped>
 .menu-container {
-  padding: 16px;
+  padding: 16px 0;
 
   .menu-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    &.selected {
+      gap: 16px;
+      grid-template-columns: repeat(3, 1fr);
+      .menu-content {
+        padding: 0;
+        gap: 4px;
+        .menu-icon {
+          font-size: 24px;
+          line-height: 24px;
+        }
+      }
+    }
   }
 
   .menu-item {
     cursor: pointer;
     transition: all 0.3s;
     background: var(--color-bg-2);
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 12px;
 
     &:hover {
       transform: translateY(-2px);
     }
 
     &.menu-item-active {
-      border: 1px solid var(--color-primary-light-4);
-      background: var(--color-primary-light-1);
+      // border: 1px solid var(--color-primary-light-4);
+      // background: var(--color-primary-light-1);
+
+      border: 1px solid var(--color-theme-2);
+      background: linear-gradient(
+        257deg,
+        rgba(102, 218, 255, 0.1) 0%,
+        rgba(78, 110, 242, 0.1) 100%
+      );
+      .menu-content {
+        color: var(--color-theme-2) !important;
+      }
     }
   }
 
@@ -84,14 +99,22 @@ const handleMenuClick = (item: MenuItem): void => {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px;
+    padding: 0 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
+    .menu-icon {
+      font-size: 32px;
+      line-height: 32px;
+    }
     .menu-text {
       flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 48px;
+      text-overflow: ellipsis;
     }
   }
 }

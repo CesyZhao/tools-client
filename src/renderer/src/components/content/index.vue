@@ -1,14 +1,17 @@
 <template>
   <div class="main-content" :class="{ 'show-work-zone': selectedKey }">
-    <div class="content-left"></div>
+    <div class="content-left">
+      <WorkZone v-if="selectedKey" />
+    </div>
     <div class="content-right">
-      <Menu @select="handleMenuSelect" />
+      <Menu :selected-key="selectedKey" @select="handleMenuSelect" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Menu from '@renderer/components/menu/index.vue'
+import WorkZone from '@renderer/components/work-zone/index.vue'
 import { ref } from 'vue'
 
 const selectedKey = ref('')
@@ -40,10 +43,12 @@ const handleMenuSelect = (menu): void => {
 
   &.show-work-zone {
     .content-left {
-      width: calc(100% - 250px);
+      width: calc(100% - 300px);
     }
     .content-right {
-      width: 250px;
+      width: 300px;
+      align-items: flex-start;
+      border-left: 1px solid var(--color-neutral-3);
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="header-left">
-      <img src="@renderer/assets/electron.svg" alt="logo" />
+      <img src="@renderer/assets/logo.svg" alt="logo" />
       <div class="app-name">Tools Client</div>
     </div>
     <div class="header-right">
@@ -27,10 +27,13 @@ import LanguageSwitch from '@renderer/components/language-switch/index.vue'
   padding: 12px 16px 0;
   .header-left {
     display: grid;
-    grid-template-columns: 40px auto;
+    grid-template-columns: 40px 120px;
     align-items: center;
+    .logo {
+      fill: var(--color-theme-2);
+    }
     .app-name {
-      background: linear-gradient(315deg, #201c44, #3d339b);
+      background: linear-gradient(10deg, var(--color-theme-1) 0%, var(--color-theme-2) 100%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -46,15 +49,6 @@ import LanguageSwitch from '@renderer/components/language-switch/index.vue'
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-  }
-}
-:root.dark {
-  .app-name {
-    background: linear-gradient(315deg, #42d392 25%, #647eff);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
   }
 }
 </style>

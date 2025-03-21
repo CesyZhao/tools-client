@@ -11,7 +11,7 @@
 
 <style lang="less">
 .themed-tooltip {
-  background-color: var(--bg-color-1);
-  color: var(--text-color);
+  background-color: var(--color-neutral-2);
+  color: var(--color-text-1);
 }
 </style>
