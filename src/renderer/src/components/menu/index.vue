@@ -20,28 +20,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-interface MenuItem {
-  key: string
-  titleKey: string
-  icon: string
-  tag?: string
-  tagColor?: string
-}
+import { IMenuItem } from '@renderer/definitions/menu'
 
 const emit = defineEmits(['select'])
 const { selectedKey } = defineProps(['selectedKey'])
 
-const menuItems = ref<MenuItem[]>([
-  { key: 'addText', titleKey: 'menu.addText', icon: 'tianjiawenzi' },
-  { key: 'imageRecognition', titleKey: 'menu.imageRecognition', icon: 'tupianshibie' },
-  { key: 'extractText', titleKey: 'menu.extractText', icon: 'tiquwenzi' },
-  { key: 'removeBackground', titleKey: 'menu.removeBackground', icon: 'mosaic' },
-  { key: 'imageCompletion', titleKey: 'menu.imageCompletion', icon: 'beijing-tihuanbeijing' },
-  { key: 'imageGeneration', titleKey: 'menu.imageGeneration', icon: 'tupianshengcheng' }
-])
+const menuItems = ref<IMenuItem[]>()
 
-const handleMenuClick = (item: MenuItem): void => {
+const handleMenuClick = (item: IMenuItem): void => {
   emit('select', item)
 }
 </script>

@@ -1,14 +1,11 @@
-import { AutoModel, AutoProcessor } from '@huggingface/transformers'
+import { AutoModel, AutoProcessor, PreTrainedModel, Processor } from '@huggingface/transformers'
 import BaseModule from '../BaseModule'
 
 class RemoveBackgroundModule implements BaseModule {
   private static instance: RemoveBackgroundModule | null = null
-  private model: unknown = null
-  private processor: unknown = null
-
-  private constructor() {
-    this.name = 'remove-background'
-  }
+  private model: PreTrainedModel | null = null
+  private processor: Processor | null = null
+  readonly name = 'remove-background'
 
   static getInstance(): RemoveBackgroundModule {
     if (!RemoveBackgroundModule.instance) {
@@ -17,7 +14,18 @@ class RemoveBackgroundModule implements BaseModule {
     return RemoveBackgroundModule.instance
   }
 
-  name = 'remove-background'
+  getModel<PreTrainedModel>(): PreTrainedModel {
+    return this.model as PreTrainedModel
+  }
+
+  getProcessor<Processor>(): Processor {
+    return this.processor as Processor
+  }
+
+  process<T, V>(url: T): V {
+    console.log(url)
+    return true as V
+  }
 
   async load(): Promise<void> {
     if (this.model && this.processor) return

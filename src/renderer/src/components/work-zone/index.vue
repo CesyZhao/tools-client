@@ -25,6 +25,7 @@
         type="file"
         accept="image/png,image/jpeg,image/jpg,image/webp"
         class="file-input"
+        multiple
         @change="handleFileChange"
       />
     </div>
