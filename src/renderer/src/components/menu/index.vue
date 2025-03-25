@@ -21,11 +21,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { IMenuItem } from '@renderer/definitions/menu'
+import menuList from '@renderer/config/menu'
 
 const emit = defineEmits(['select'])
 const { selectedKey } = defineProps(['selectedKey'])
 
-const menuItems = ref<IMenuItem[]>()
+const menuItems = ref<IMenuItem[]>(menuList)
 
 const handleMenuClick = (item: IMenuItem): void => {
   emit('select', item)

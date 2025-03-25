@@ -1,7 +1,13 @@
-import { AutoModel, AutoProcessor, PreTrainedModel, Processor } from '@huggingface/transformers'
+import {
+  AutoModel,
+  AutoProcessor,
+  PreTrainedModel,
+  Processor,
+  RawImage
+} from '@huggingface/transformers'
 import BaseModule from '../BaseModule'
 
-class RemoveBackgroundModule implements BaseModule {
+class RemoveBackgroundModule implements BaseModule<string, Promise<boolean>> {
   private static instance: RemoveBackgroundModule | null = null
   private model: PreTrainedModel | null = null
   private processor: Processor | null = null
@@ -22,9 +28,10 @@ class RemoveBackgroundModule implements BaseModule {
     return this.processor as Processor
   }
 
-  process<T, V>(url: T): V {
-    console.log(url)
-    return true as V
+  async process(url: string): Promise<boolean> {
+    const image = await RawImage.fromURL(url)
+    console.log(image)
+    return true
   }
 
   async load(): Promise<void> {

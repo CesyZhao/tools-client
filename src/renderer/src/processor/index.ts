@@ -1,24 +1,22 @@
-import { AutoModel, Processor as AProcessor } from '@huggingface/transformers'
 import { MenuKey } from '@renderer/definitions/menu'
 import RemoveBackgroundModule from './modules/remove-background/module'
 
 const modelMap = new Map([[MenuKey.RemoveBackground, RemoveBackgroundModule]])
 
 class Processor {
-  currentModel: AutoModel | null = null
-  currentProcessor: AProcessor | null = null
+  currentModule!: RemoveBackgroundModule
 
-  applyModel(menuKey: MenuKey): void {
+  async applyModel(menuKey: MenuKey): Promise<void> {
     const module = modelMap.get(menuKey)
     if (module) {
       const instance = module.getInstance()
-      this.currentModel = instance.getModel()
-      this.currentProcessor = instance.getProcessor()
+      await instance.load()
+      this.currentModule = instance
     }
   }
 
-  process(): void {
-    console.log('process')
+  process(args): void {
+    this.currentModule.process(args)
   }
 }
 

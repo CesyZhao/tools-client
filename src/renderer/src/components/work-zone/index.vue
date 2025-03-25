@@ -34,8 +34,17 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import Processor from '@renderer/processor'
 
-const emit = defineEmits(['upload'])
+const { selectedKey } = defineProps(['selectedKey'])
+
+const currentProcessor = ref<Processor | null>(null)
+
+const processor = new Processor()
+
+currentProcessor.value = processor
+currentProcessor.value.applyModel(selectedKey)
+
 const fileInput = ref<HTMLInputElement | null>(null)
 
 const handleUpload = (file: File): void => {
@@ -43,7 +52,7 @@ const handleUpload = (file: File): void => {
     alert('图片大小不能超过10MB')
     return
   }
-  emit('upload', file)
+  currentProcessor.value?.process(file)
 }
 
 const handleDrop = (e: DragEvent): void => {
