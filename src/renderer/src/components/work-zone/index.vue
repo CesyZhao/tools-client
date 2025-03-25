@@ -1,6 +1,9 @@
 <template>
   <div class="work-zone">
+    <a-spin v-show="modelLoading" :size="32" :tip="$t('work-zone.modelLoading')"></a-spin>
+
     <div
+      v-show="!modelLoading"
       class="upload-area"
       @dragover.prevent
       @drop.prevent="handleDrop"
@@ -33,17 +36,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import Processor from '@renderer/processor'
 
+const processor = new Processor()
 const { selectedKey } = defineProps(['selectedKey'])
-
+const modelLoading = ref(false)
 const currentProcessor = ref<Processor | null>(null)
 
-const processor = new Processor()
-
-currentProcessor.value = processor
-currentProcessor.value.applyModel(selectedKey)
+watchEffect(async () => {
+  modelLoading.value = true
+  currentProcessor.value = processor
+  await currentProcessor.value.applyModel(selectedKey)
+  modelLoading.value = false
+})
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
@@ -52,6 +58,7 @@ const handleUpload = (file: File): void => {
     alert('图片大小不能超过10MB')
     return
   }
+  console.log(currentProcessor.value, '------------------')
   currentProcessor.value?.process(file)
 }
 

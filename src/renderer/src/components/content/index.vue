@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" :class="{ 'show-work-zone': selectedKey }">
     <div class="content-left">
-      <WorkZone v-if="selectedKey" />
+      <WorkZone v-if="selectedKey" :selected-key="selectedKey" />
     </div>
     <div class="content-right">
       <Menu :selected-key="selectedKey" @select="handleMenuSelect" />

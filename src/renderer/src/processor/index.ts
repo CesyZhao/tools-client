@@ -8,6 +8,7 @@ class Processor {
 
   async applyModel(menuKey: MenuKey): Promise<void> {
     const module = modelMap.get(menuKey)
+    console.log(module, '================')
     if (module) {
       const instance = module.getInstance()
       await instance.load()

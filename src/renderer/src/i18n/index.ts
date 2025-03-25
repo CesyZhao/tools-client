@@ -18,7 +18,8 @@ const messages = {
       title: '选择图片或者文件夹以消除背景',
       tip1: '拖入图片、文件夹',
       tip2: '或者粘贴图片',
-      button: '上传图片'
+      button: '上传图片',
+      modelLoading: '模型加载中...'
     }
   },
   en: {
@@ -38,7 +39,8 @@ const messages = {
       title: 'Select an image or folder to remove the background',
       tip1: 'Drag an image or folder',
       tip2: 'Or paste an image',
-      button: 'Upload Image'
+      button: 'Upload Image',
+      modelLoading: 'Model loading...'
     }
   }
 }
