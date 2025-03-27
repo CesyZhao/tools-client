@@ -1,5 +1,6 @@
 <template>
   <div class="main-content" :class="{ 'show-work-zone': selectedKey }">
+    <div @click="download">1111111</div>
     <div class="content-left">
       <WorkZone v-if="selectedKey" :selected-key="selectedKey" />
     </div>
@@ -18,6 +19,12 @@ const selectedKey = ref('')
 
 const handleMenuSelect = (menu): void => {
   selectedKey.value = menu.key
+}
+
+const download = (): void => {
+  fetch('https://hf-mirror.com/briaai/RMBG-1.4/resolve/main/onnx/model_quantized.onnx').then(
+    response => response.blob()
+  )
 }
 </script>
 

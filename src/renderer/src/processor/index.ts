@@ -1,7 +1,12 @@
 import { MenuKey } from '@renderer/definitions/menu'
 import RemoveBackgroundModule from './modules/remove-background/module'
+import { env } from '@huggingface/transformers'
 
 const modelMap = new Map([[MenuKey.RemoveBackground, RemoveBackgroundModule]])
+
+env.allowLocalModels = true
+env.allowRemoteModels = false
+env.localModelPath = 'file:///Users/sifan/Documents/models/'
 
 class Processor {
   currentModule!: RemoveBackgroundModule

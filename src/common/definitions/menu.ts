@@ -7,6 +7,10 @@ export enum MenuKey {
   ImageGeneration = 'imageGeneration'
 }
 
+export const MenuModelMap = new Map<MenuKey, string[]>([
+  [MenuKey.RemoveBackground, ['Xenova/modnet', 'briaai/RMBG-1.4']]
+])
+
 export interface IMenuItem {
   key: MenuKey
   titleKey: string

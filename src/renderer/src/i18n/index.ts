@@ -20,6 +20,19 @@ const messages = {
       tip2: '或者粘贴图片',
       button: '上传图片',
       modelLoading: '模型加载中...'
+    },
+    settings: {
+      paths: {
+        title: '路径设置',
+        modelPath: {
+          title: '模型下载路径',
+          description: '设置AI模型的下载和存储位置'
+        },
+        savePath: {
+          title: '文件保存路径',
+          description: '设置处理后的文件默认保存位置'
+        }
+      }
     }
   },
   en: {
@@ -41,6 +54,19 @@ const messages = {
       tip2: 'Or paste an image',
       button: 'Upload Image',
       modelLoading: 'Model loading...'
+    },
+    settings: {
+      paths: {
+        title: 'Path Settings',
+        modelPath: {
+          title: 'Model Download Path',
+          description: 'Set the download and storage location for AI models'
+        },
+        savePath: {
+          title: 'File Save Path',
+          description: 'Set the default save location for processed files'
+        }
+      }
     }
   }
 }

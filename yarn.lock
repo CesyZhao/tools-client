@@ -801,14 +801,14 @@
   resolved "https://registry.npmmirror.com/@huggingface/jinja/-/jinja-0.3.3.tgz#dd31635a19df5ae011d0e8d97eea8675bebbcda1"
   integrity sha512-vQQr2JyWvVFba3Lj9es4q9vCl1sAc74fdgnEMoX8qHrXtswap9ge9uO3ONDzQB0cQ0PUyaKY2N6HaVbTBvSXvw==
 
-"@huggingface/transformers@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.npmmirror.com/@huggingface/transformers/-/transformers-3.4.0.tgz#953d328ab60e79fa997857ddd5573ff820173c72"
-  integrity sha512-jyuglsWc+Ls9/U7eGDDY+xYgDgDtwxQ4ul/5VQoqo2r0LfAnJ+zSRUjKnY6paOyzyhbKaftfEsvXJ049aL1cyw==
+"@huggingface/transformers@3.3.3":
+  version "3.3.3"
+  resolved "https://registry.npmmirror.com/@huggingface/transformers/-/transformers-3.3.3.tgz#d01aca2b07c0aec21a758d6cf4a6adbe8005b67a"
+  integrity sha512-OcMubhBjW6u1xnp0zSt5SvCxdGHuhP2k+w2Vlm3i0vNcTJhJTZWxxYQmPBfcb7PX+Q6c43lGSzWD6tsJFwka4Q==
   dependencies:
     "@huggingface/jinja" "^0.3.3"
     onnxruntime-node "1.20.1"
-    onnxruntime-web "1.22.0-dev.20250306-ccf8fdd9ea"
+    onnxruntime-web "1.21.0-dev.20250206-d981b153d3"
     sharp "^0.33.5"
 
 "@humanfs/core@^0.19.1":
@@ -4241,10 +4241,10 @@ onnxruntime-common@1.20.1:
   resolved "https://registry.npmmirror.com/onnxruntime-common/-/onnxruntime-common-1.20.1.tgz#b42e317d4d6728745b9e8089617c8cd938d312dc"
   integrity sha512-YiU0s0IzYYC+gWvqD1HzLc46Du1sXpSiwzKb63PACIJr6LfL27VsXSXQvt68EzD3V0D5Bc0vyJTjmMxp0ylQiw==
 
-onnxruntime-common@1.22.0-dev.20250306-aafa8d170a:
-  version "1.22.0-dev.20250306-aafa8d170a"
-  resolved "https://registry.npmmirror.com/onnxruntime-common/-/onnxruntime-common-1.22.0-dev.20250306-aafa8d170a.tgz#e9b2a1744d42f00c54adad96330a4330e2d23193"
-  integrity sha512-NfIQnW4lIk/8LnhnYqknYPeet0U0+AADgKQRlKex36QrNoVSCY+aNaX6wyy2VzQ4CNWxsYh0E203ajRD/zxn0g==
+onnxruntime-common@1.21.0-dev.20250206-d981b153d3:
+  version "1.21.0-dev.20250206-d981b153d3"
+  resolved "https://registry.npmmirror.com/onnxruntime-common/-/onnxruntime-common-1.21.0-dev.20250206-d981b153d3.tgz#b9d782d2228f2d2d6abe8063076ae1543cc04463"
+  integrity sha512-TwaE51xV9q2y8pM61q73rbywJnusw9ivTEHAJ39GVWNZqxCoDBpe/tQkh/w9S+o/g+zS7YeeL0I/2mEWd+dgyA==
 
 onnxruntime-node@1.20.1:
   version "1.20.1"
@@ -4254,15 +4254,15 @@ onnxruntime-node@1.20.1:
     onnxruntime-common "1.20.1"
     tar "^7.0.1"
 
-onnxruntime-web@1.22.0-dev.20250306-ccf8fdd9ea:
-  version "1.22.0-dev.20250306-ccf8fdd9ea"
-  resolved "https://registry.npmmirror.com/onnxruntime-web/-/onnxruntime-web-1.22.0-dev.20250306-ccf8fdd9ea.tgz#fc9618b8b790dbca5c0884d09fd889237742bf3d"
-  integrity sha512-YwqS9Qqx2eKFXIx+HQloqRUG5/STHPUuNk8wn+qVVmwXBIfNdXX0/Lm7wgo5CnC2k+yqZmjDV5V1dZi4PeSPGQ==
+onnxruntime-web@1.21.0-dev.20250206-d981b153d3:
+  version "1.21.0-dev.20250206-d981b153d3"
+  resolved "https://registry.npmmirror.com/onnxruntime-web/-/onnxruntime-web-1.21.0-dev.20250206-d981b153d3.tgz#b87b374bdef16c3322e031da1f1ad5ec39b760ce"
+  integrity sha512-esDVQdRic6J44VBMFLumYvcGfioMh80ceLmzF1yheJyuLKq/Th8VT2aj42XWQst+2bcWnAhw4IKmRQaqzU8ugg==
   dependencies:
     flatbuffers "^25.1.24"
     guid-typescript "^1.0.9"
     long "^5.2.3"
-    onnxruntime-common "1.22.0-dev.20250306-aafa8d170a"
+    onnxruntime-common "1.21.0-dev.20250206-d981b153d3"
     platform "^1.3.6"
     protobufjs "^7.2.4"
 
