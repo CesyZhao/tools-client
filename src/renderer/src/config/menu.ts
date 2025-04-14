@@ -1,4 +1,4 @@
-import { IMenuItem, MenuKey } from '@renderer/definitions/menu'
+import { IMenuItem, MenuKey } from '../../../common/definitions/menu'
 
 const menu: Array<IMenuItem> = [
   { key: MenuKey.AddText, titleKey: 'menu.addText', icon: 'tianjiawenzi' },

@@ -1,7 +1,13 @@
+import EnvironmentModule from './Environment'
 import SettingModule from './Setting'
+import FileModule from './File'
+import ModelModule from './Model'
 
 export interface ModuleMap {
   setting: SettingModule
+  environment: EnvironmentModule
+  file: FileModule
+  model: ModelModule
 }
 
 class Bridge {
@@ -9,7 +15,10 @@ class Bridge {
 
   constructor() {
     this.modules = {
-      setting: SettingModule.getInstance()
+      setting: SettingModule.getInstance(),
+      environment: EnvironmentModule.getInstance(),
+      file: FileModule.getInstance(),
+      model: ModelModule.getInstance()
     }
   }
 

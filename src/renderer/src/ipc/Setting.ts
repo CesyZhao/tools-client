@@ -1,5 +1,5 @@
 import Base from './Base'
-import { SettingOptions } from '../../../common/definitions/setting'
+import { SettingGroup } from '../../../common/definitions/setting'
 import { BridgeEvent } from '../../../common/definitions/bridge'
 
 class Setting extends Base {
@@ -24,8 +24,8 @@ class Setting extends Base {
     return this.invoke<void>(BridgeEvent.SETTING_SET, key, value)
   }
 
-  async getAll(): Promise<SettingOptions> {
-    return this.invoke<SettingOptions>(BridgeEvent.SETTING_GET_ALL)
+  async getAll(): Promise<SettingGroup[]> {
+    return this.invoke<SettingGroup[]>(BridgeEvent.SETTING_GET_ALL)
   }
 
   async reset(): Promise<void> {

@@ -7,6 +7,7 @@
     <div class="header-right">
       <theme-switch />
       <language-switch />
+      <setting />
     </div>
   </div>
 </template>
@@ -14,12 +15,13 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@renderer/components/theme-switch/index.vue'
 import LanguageSwitch from '@renderer/components/language-switch/index.vue'
+import Setting from '@renderer/components/setting/index.vue'
 </script>
 
 <style lang="less" scoped>
 .header {
   display: grid;
-  grid-template-columns: auto 88px;
+  grid-template-columns: auto 112px;
   height: 72px;
   width: 100%;
   border-bottom: 1px solid var(--color-neutral-3);
@@ -47,7 +49,7 @@ import LanguageSwitch from '@renderer/components/language-switch/index.vue'
   }
   .header-right {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
   }
 }

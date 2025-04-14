@@ -1,9 +1,15 @@
-import { MenuKey, MenuModelMap } from '../../common/definitions/menu'
+import { ModelKey, ModelConfig } from '../../common/definitions/model'
 
-const modelConfig = {
-  functionKey: MenuKey.RemoveBackground,
-  modelName: MenuModelMap.get(MenuKey.RemoveBackground),
-  files: ['onnx/model_quantized.onnx', 'preprocessor_config.json']
-}
+const modelConfigList: ModelConfig[] = [
+  {
+    modelName: ModelKey.Briaai,
+    files: ['onnx/model_quantized.onnx', 'preprocessor_config.json']
+  },
+  {
+    modelName: ModelKey.Xenova,
+    files: ['onnx/model_quantized.onnx', 'preprocessor_config.json']
+  }
+  // 可以添加更多模型配置
+]
 
-export default modelConfig
+export default modelConfigList

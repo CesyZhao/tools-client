@@ -40,7 +40,6 @@ body {
 }
 
 .theme-switch {
-  padding: 10px;
   cursor: pointer;
 }
 </style>

@@ -1,4 +1,4 @@
-import { MenuKey } from '@renderer/definitions/menu'
+import { MenuKey } from '../../../common/definitions/menu'
 import RemoveBackgroundModule from './modules/remove-background/module'
 import { env } from '@huggingface/transformers'
 
