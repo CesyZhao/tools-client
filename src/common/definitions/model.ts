@@ -19,3 +19,16 @@ export interface ModelConfig {
   modelName: ModelKey
   files: string[]
 }
+
+export type DeviceType =
+  | 'auto'
+  | 'gpu'
+  | 'cpu'
+  | 'wasm'
+  | 'webgpu'
+  | 'cuda'
+  | 'dml'
+  | 'webnn'
+  | 'webnn-npu'
+  | 'webnn-gpu'
+  | 'webnn-cpu'

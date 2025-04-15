@@ -174,7 +174,15 @@ class Model extends Base {
                   totalFilesSize += fileSize
                 }
 
-                const filePath = path.join(modelDir, path.basename(fileName))
+                // 处理文件路径，保留目录结构
+                const filePath = path.join(modelDir, fileName)
+
+                // 确保文件的目录存在
+                const fileDir = path.dirname(filePath)
+                if (!fs.existsSync(fileDir)) {
+                  fs.mkdirSync(fileDir, { recursive: true })
+                }
+
                 const fileStream = createWriteStream(filePath)
 
                 // 监听数据接收事件，更新进度

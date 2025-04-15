@@ -81,7 +81,6 @@ class Environment extends Base {
           }
         }
       }
-
       model.download = folderExists && filesExist
     }
 
