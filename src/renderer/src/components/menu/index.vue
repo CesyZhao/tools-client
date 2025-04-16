@@ -103,7 +103,6 @@ const startModelDownload = async (item: MenuItemWithStatus): Promise<void> => {
 
 // 监听下载进度
 const handleDownloadProgress = (process): void => {
-  console.log('progress', process)
   const { modelName, progress } = process
   const index = menuItems.value.findIndex(item => item.modelKey === modelName)
 

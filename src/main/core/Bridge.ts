@@ -2,12 +2,14 @@ import SettingModule from './Setting'
 import Environment from './Environment'
 import Model from './Model'
 import File from './File'
+import Log from './Log'
 
 export interface ModuleMap {
   setting: SettingModule
   environment: Environment
   model: Model
   file: File
+  log: Log
 }
 
 class Bridge {
@@ -18,7 +20,8 @@ class Bridge {
       setting: SettingModule.getInstance(),
       environment: Environment.getInstance(),
       model: Model.getInstance(),
-      file: File.getInstance()
+      file: File.getInstance(),
+      log: Log.getInstance()
     }
   }
 

@@ -10,6 +10,8 @@ import { BridgeEvent } from '../../common/definitions/bridge'
 import Base from './Base'
 import Setting from './Setting'
 import { ModelConfig } from '../../common/definitions/model'
+import Log from './Log'
+const log = Log.getInstance()
 
 interface DownloadProgress {
   modelName: string
@@ -75,12 +77,12 @@ class Model extends Base {
   public async downloadModel(modelName: string): Promise<boolean> {
     const modelConfig = this.getModelConfig(modelName)
     if (!modelConfig) {
-      console.error(`未找到模型配置: ${modelName}`)
+      log.error(`未找到模型配置: ${modelName}`)
       return false
     }
 
     if (this.downloadingModels.has(modelName)) {
-      console.log(`模型 ${modelName} 已经在下载中`)
+      log.info(`模型 ${modelName} 已经在下载中`)
       return true
     }
 
@@ -123,7 +125,7 @@ class Model extends Base {
       // 创建一个函数来下载单个文件
       const downloadFile = async (fileName: string): Promise<boolean> => {
         const fileUrl = new URL(path.join(baseDownloadUrl, fileName))
-        console.log(`开始下载文件: ${fileUrl}`)
+        log.info(`开始下载文件: ${fileUrl}`)
 
         // 处理可能的重定向
         const followRedirects = async (url: URL): Promise<boolean> => {
@@ -148,7 +150,7 @@ class Model extends Base {
                     return
                   }
 
-                  console.log(`重定向到: ${redirectUrl}`)
+                  log.ingo(`重定向到: ${redirectUrl}`)
                   // 构建完整的重定向 URL
                   const newUrl = new URL(redirectUrl, url.origin)
                   // 递归处理重定向
@@ -168,7 +170,7 @@ class Model extends Base {
                 }
 
                 const fileSize = parseInt(response.headers['content-length'] || '0', 10)
-                console.log(`文件大小: ${fileSize} 字节`)
+                log.info(`文件大小: ${fileSize} 字节`)
 
                 if (fileSize > 0) {
                   totalFilesSize += fileSize
@@ -192,24 +194,24 @@ class Model extends Base {
 
                 // 监听错误事件
                 fileStream.on('error', err => {
-                  console.error(`文件写入错误: ${err.message}`)
+                  log.error(`文件写入错误: ${err.message}`)
                   reject(err)
                 })
 
                 try {
                   // 使用 pipeline 处理流，确保完整性
                   await pipeline(response, fileStream)
-                  console.log(`文件 ${fileName} 下载完成`)
+                  log.info(`文件 ${fileName} 下载完成`)
                   resolve(true)
                 } catch (error) {
-                  console.error(`文件 ${fileName} 下载失败: ${error.message}`)
+                  log.error(`文件 ${fileName} 下载失败: ${error.message}`)
                   reject(error)
                 }
               }
             )
 
             req.on('error', error => {
-              console.error(`请求错误: ${error.message}`)
+              log.error(`请求错误: ${error.message}`)
               reject(error)
             })
 
@@ -232,7 +234,7 @@ class Model extends Base {
             try {
               controller.abort()
             } catch (e) {
-              console.error('取消下载时出错:', e)
+              log.error('取消下载时出错:', e)
             }
           })
         },
@@ -244,7 +246,7 @@ class Model extends Base {
         try {
           await downloadFile(fileName)
         } catch (error) {
-          console.error(`下载文件 ${fileName} 失败:`, error)
+          log.error(`下载文件 ${fileName} 失败:`, error)
           progress.status = 'error'
           progress.message = error.message
           this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
@@ -263,7 +265,7 @@ class Model extends Base {
 
       return true
     } catch (error) {
-      console.error(`下载模型 ${modelName} 失败:`, error)
+      log.error(`下载模型 ${modelName} 失败:`, error)
       progress.status = 'error'
       progress.message = error.message
       this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)

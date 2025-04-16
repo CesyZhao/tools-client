@@ -67,6 +67,7 @@ const emit = defineEmits(['env-ready'])
 const bridge = new Bridge()
 const envModule = bridge.getModule('environment')
 const settingModule = bridge.getModule('setting') // 添加 settingModule
+const log = bridge.getModule('log')
 
 const currentStepIndex = ref(0)
 const stepsContainerRef = ref<HTMLElement | null>(null)
@@ -165,7 +166,7 @@ const checkWebGPU = async (): Promise<boolean> => {
     steps.value[0].loading = false
     return supported
   } catch (error) {
-    console.error('WebGPU 检测失败:', error)
+    log.error('WebGPU 检测失败:', error)
     steps.value[0].status = 'error'
     steps.value[0].description = t('entry.steps.environment.checkFailed')
     steps.value[0].loading = false
@@ -200,12 +201,12 @@ const checkModels = async (): Promise<void> => {
     // 去重
     const uniqueModels = [...new Set(allModels)]
 
-    console.log('uniqueModels', uniqueModels)
+    log.info('uniqueModels', uniqueModels)
 
     // 检查模型下载情况
     const status = await envModule.checkModels(uniqueModels)
 
-    console.log('result', status)
+    log.info('result', status)
 
     localStorage.setItem('modelStatusList', JSON.stringify(status))
 
@@ -214,7 +215,7 @@ const checkModels = async (): Promise<void> => {
 
     steps.value[1].loading = false
   } catch (error) {
-    console.error('模型检测失败:', error)
+    log.error('模型检测失败:', error)
     steps.value[1].status = 'error'
     steps.value[1].description = t('entry.steps.dependencies.checkFailed')
     steps.value[1].loading = false
@@ -242,7 +243,7 @@ const checkSystemConfig = async (): Promise<void> => {
       emit('env-ready')
     }, 1000)
   } catch (error) {
-    console.error('系统配置检查失败:', error)
+    log.error('系统配置检查失败:', error)
     steps.value[2].status = 'error'
     steps.value[2].description = t('entry.steps.config.checkFailed')
     steps.value[2].loading = false
@@ -272,7 +273,7 @@ const checkEnv = async (): Promise<void> => {
     currentStepIndex.value = 2
     await checkSystemConfig()
   } catch (error) {
-    console.error('环境检查失败:', error)
+    log.error('环境检查失败:', error)
   }
 }
 

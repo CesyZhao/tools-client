@@ -5,6 +5,8 @@ import Base from './Base'
 import { SettingGroup } from '../../common/definitions/setting'
 import { BridgeEvent } from '../../common/definitions/bridge'
 import { defaultSettings } from '../config/setting'
+import Log from './Log'
+const log = Log.getInstance()
 
 class Setting extends Base {
   private static instance: Setting | null = null
@@ -50,7 +52,7 @@ class Setting extends Base {
         this.saveSettings()
       }
     } catch (error) {
-      console.error('加载设置失败:', error)
+      log.error('加载设置失败:', error)
       // 出错时使用默认设置
       this.settings = JSON.parse(JSON.stringify(defaultSettings))
     }
@@ -80,7 +82,7 @@ class Setting extends Base {
       }
       fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2))
     } catch (error) {
-      console.error('保存设置失败:', error)
+      log.error('保存设置失败:', error)
     }
   }
 

@@ -3,6 +3,8 @@ import * as path from 'path'
 import { dialog, BrowserWindow } from 'electron'
 import Base from './Base'
 import { BridgeEvent } from '../../common/definitions/bridge'
+import Log from './Log'
+const log = Log.getInstance()
 
 interface ImageFile {
   path: string
@@ -78,7 +80,7 @@ class File extends Base {
       const extension = path.extname(imagePath).substring(1)
       return `data:image/${extension};base64,${base64}`
     } catch (error) {
-      console.error('读取图片失败:', error)
+      log.error('读取图片失败:', error)
       return null
     }
   }
@@ -98,7 +100,7 @@ class File extends Base {
       await this.readImagesFromFolder(folderPath, '', imageFiles)
       return imageFiles
     } catch (error) {
-      console.error('读取文件夹图片失败:', error)
+      log.error('读取文件夹图片失败:', error)
       return null
     }
   }
@@ -139,7 +141,7 @@ class File extends Base {
               base64: `data:image/${extName};base64,${base64}`
             })
           } catch (error) {
-            console.error(`读取图片 ${filePath} 失败:`, error)
+            log.error(`读取图片 ${filePath} 失败:`, error)
           }
         }
       }

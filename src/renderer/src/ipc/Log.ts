@@ -2,6 +2,18 @@ import { BridgeEvent } from '../../../common/definitions/bridge'
 import BaseModule from './Base'
 
 class Log extends BaseModule {
+  private static instance: Log | null = null
+
+  private constructor() {
+    super('log')
+  }
+
+  static getInstance(): Log {
+    if (!Log.instance) {
+      Log.instance = new Log()
+    }
+    return Log.instance
+  }
   /**
    * 记录调试级别日志
    */

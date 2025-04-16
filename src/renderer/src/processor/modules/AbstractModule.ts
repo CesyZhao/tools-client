@@ -1,24 +1,14 @@
 import { PretrainedConfig } from '@huggingface/transformers/types/configs'
 import { PretrainedProcessorOptions } from '@huggingface/transformers/types/base/processing_utils'
 import BaseModule from './BaseModule'
+import { DeviceType } from 'src/common/definitions/model'
 
 abstract class AbstractModule<U, X> extends BaseModule<U, X> {
   // 模型配置
   protected abstract modelConfig: {
     modelId: string
     config?: PretrainedConfig
-    device?:
-      | 'auto'
-      | 'gpu'
-      | 'cpu'
-      | 'wasm'
-      | 'webgpu'
-      | 'cuda'
-      | 'dml'
-      | 'webnn'
-      | 'webnn-npu'
-      | 'webnn-gpu'
-      | 'webnn-cpu'
+    device?: DeviceType
   }
 
   // 处理器配置

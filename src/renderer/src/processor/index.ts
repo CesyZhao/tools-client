@@ -1,5 +1,6 @@
 import { MenuKey } from '../../../common/definitions/menu'
 import RemoveBackgroundModule from './modules/remove-background/module'
+// import RemoveBackgroundModuleWebGPU from './modules/remove-background/module-webgpu'
 import { env } from '@huggingface/transformers'
 
 const modelMap = new Map([[MenuKey.RemoveBackground, RemoveBackgroundModule]])
@@ -13,7 +14,6 @@ class Processor {
 
   async applyModel(menuKey: MenuKey): Promise<void> {
     const module = modelMap.get(menuKey)
-    console.log(module, '================')
     if (module) {
       const instance = module.getInstance()
       await instance.load()

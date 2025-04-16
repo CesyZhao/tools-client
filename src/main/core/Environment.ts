@@ -6,6 +6,9 @@ import Setting from './Setting'
 import { BridgeEvent } from '../../common/definitions/bridge'
 import Base from './Base'
 import { ModelStatus } from '../../common/definitions/model'
+import Log from './Log'
+
+const log = Log.getInstance()
 
 class Environment extends Base {
   private static instance: Environment | null = null
@@ -46,7 +49,7 @@ class Environment extends Base {
       try {
         fs.mkdirSync(modelPath, { recursive: true })
       } catch (error) {
-        console.error('创建模型目录失败:', error)
+        log.error('创建模型目录失败:', error)
         // 所有模型标记为未下载
         result.forEach(model => {
           model.download = false
