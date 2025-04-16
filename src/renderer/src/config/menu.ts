@@ -1,4 +1,4 @@
-import { ModelKey } from 'src/common/definitions/model'
+// import { ModelKey } from 'src/common/definitions/model'
 import { IMenuItem, MenuKey } from '../../../common/definitions/menu'
 
 const menu: Array<IMenuItem> = [
@@ -8,7 +8,6 @@ const menu: Array<IMenuItem> = [
   { key: MenuKey.RemoveBackground, titleKey: 'menu.removeBackground', icon: 'mosaic' },
   {
     key: MenuKey.ImageCompletion,
-    models: [ModelKey.Xenova, ModelKey.Briaai],
     titleKey: 'menu.imageCompletion',
     icon: 'beijing-tihuanbeijing'
   },

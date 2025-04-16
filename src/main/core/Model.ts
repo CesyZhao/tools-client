@@ -150,7 +150,7 @@ class Model extends Base {
                     return
                   }
 
-                  log.ingo(`重定向到: ${redirectUrl}`)
+                  log.info(`重定向到: ${redirectUrl}`)
                   // 构建完整的重定向 URL
                   const newUrl = new URL(redirectUrl, url.origin)
                   // 递归处理重定向
@@ -241,20 +241,41 @@ class Model extends Base {
         progress
       })
 
-      // 依次下载所有文件
-      for (const fileName of filesToDownload) {
-        try {
-          await downloadFile(fileName)
-        } catch (error) {
-          log.error(`下载文件 ${fileName} 失败:`, error)
+      // 并行下载所有文件
+      try {
+        // 创建所有文件的下载任务
+        const downloadTasks = filesToDownload.map(fileName => downloadFile(fileName))
+
+        // 并行执行所有下载任务
+        const results = await Promise.all(downloadTasks)
+
+        // 检查是否所有文件都下载成功
+        if (results.every(result => result === true)) {
+          // 所有文件下载完成
+          progress.status = 'completed'
+          progress.progress = 1
+          this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
+
+          // 从下载列表中移除
+          this.downloadingModels.delete(modelName)
+          return true
+        } else {
+          // 有文件下载失败
+          log.error(`部分文件下载失败`)
           progress.status = 'error'
-          progress.message = error.message
+          progress.message = '部分文件下载失败'
           this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
           this.downloadingModels.delete(modelName)
           return false
         }
+      } catch (error) {
+        log.error(`下载模型 ${modelName} 失败:`, error)
+        progress.status = 'error'
+        progress.message = error.message
+        this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
+        this.downloadingModels.delete(modelName)
+        return false
       }
-
       // 所有文件下载完成
       progress.status = 'completed'
       progress.progress = 1

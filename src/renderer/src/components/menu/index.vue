@@ -83,11 +83,10 @@ const startModelDownload = async (item: MenuItemWithStatus): Promise<void> => {
       menuItems.value[index].downloading = true
       menuItems.value[index].progress = 0
     }
+    Message.success(t('common.downloadStarted'))
 
     // 通知主进程开始下载
     await modelModule.downloadModel(item.modelKey)
-
-    Message.success(t('common.downloadStarted', { name: t(item.titleKey) }))
   } catch (error) {
     console.error('下载模型失败:', error)
     Message.error(t('common.downloadFailed'))
