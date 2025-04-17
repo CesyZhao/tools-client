@@ -105,13 +105,17 @@ const handleDownloadProgress = (process): void => {
   const { modelName, progress } = process
   const index = menuItems.value.findIndex(item => item.modelKey === modelName)
 
+  const menuItem = menuItems.value[index]
+
   if (index !== -1) {
-    menuItems.value[index].progress = Math.floor(progress * 100)
+    menuItem.progress = Math.floor(progress * 100)
 
     // 下载完成
     if (progress >= 1) {
-      menuItems.value[index].downloading = false
-      menuItems.value[index].download = true
+      menuItem.downloading = false
+      menuItem.download = true
+
+      emit('select', menuItem)
 
       // 更新本地存储
       updateLocalStorage()
