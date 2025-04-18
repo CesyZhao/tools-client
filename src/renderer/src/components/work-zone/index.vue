@@ -36,18 +36,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import Processor from '@renderer/processor'
+import Bridge from '@renderer/ipc/Bridge'
 
-const processor = new Processor()
+const bridge = new Bridge()
+const setting = bridge.getModule('setting')
+
 const { selectedKey } = defineProps(['selectedKey'])
 const modelLoading = ref(false)
 const currentProcessor = ref<Processor | null>(null)
 
+onMounted(async () => {
+  const modelPath = await setting.get('modelPath')
+  const processor = new Processor(modelPath)
+  currentProcessor.value = processor
+})
+
 watchEffect(async () => {
   modelLoading.value = true
-  currentProcessor.value = processor
-  await currentProcessor.value.applyModel(selectedKey)
+  await currentProcessor?.value?.applyModel(selectedKey)
   modelLoading.value = false
 })
 
