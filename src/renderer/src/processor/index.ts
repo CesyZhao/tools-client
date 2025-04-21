@@ -1,34 +1,33 @@
 import { MenuKey } from '../../../common/definitions/menu'
 import RemoveBackgroundModule from './modules/remove-background/module'
-import { kebabCase } from 'lodash'
-// import RemoveBackgroundModuleWebGPU from './modules/remove-background/module-webgpu'
+import RemoveBackgroundModuleWebGPU from './modules/remove-background/module-gpu'
 import { env } from '@huggingface/transformers'
 
 const modelMap = new Map([[MenuKey.RemoveBackground, RemoveBackgroundModule]])
 
-const menuNameList = [MenuKey.RemoveBackground]
+const modelMapWebGPU = new Map([[MenuKey.RemoveBackground, RemoveBackgroundModuleWebGPU]])
 
 class Processor {
-  currentModule!: RemoveBackgroundModule
+  currentModule!: RemoveBackgroundModule | RemoveBackgroundModuleWebGPU
   localModelPath!: string
   enableWebGPU = false
-  modelMap!: Map<MenuKey, unknown>
+  modelMap!: typeof modelMap | typeof modelMapWebGPU
 
   constructor(localModelPath, enableWebGPU = false) {
     env.allowLocalModels = true
     env.allowRemoteModels = false
-    env.localModelPath = localModelPath
+    env.useBrowserCache = false
+    // env.localModelPath = localModelPath
 
-    menuNameList.forEach(name => {
-      const dirName = kebabCase(name)
-      import(`./modules/${dirName}/module${enableWebGPU ? '-webgpu' : ''}.ts`).then(module => {
-        modelMap.set(name, module)
-      })
-    })
+    this.modelMap = enableWebGPU ? modelMapWebGPU : modelMap
+
+    if (enableWebGPU && env.backends?.onnx?.wasm) {
+      env.backends.onnx.wasm.proxy = true
+    }
   }
 
   async applyModel(menuKey: MenuKey): Promise<void> {
-    const module = modelMap.get(menuKey)
+    const module = this.modelMap.get(menuKey)
     if (module) {
       const instance = module.getInstance()
       await instance.load()

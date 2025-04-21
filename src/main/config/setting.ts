@@ -2,7 +2,12 @@ import { app } from 'electron'
 import * as path from 'path'
 import { SettingGroup } from '../../common/definitions/setting'
 
-const defaultModelPath = path.join(app.getPath('userData'), 'models')
+// 根据环境确定模型路径
+const defaultModelPath =
+  process.env.NODE_ENV === 'development'
+    ? path.join(process.cwd(), 'src/renderer/public/models') // 开发环境
+    : path.join(app.getAppPath(), 'dist/renderer/public/models') // 生产环境
+
 const defaultSavePath = path.join(app.getPath('downloads'), 'tools-client')
 
 export const defaultSettings: SettingGroup[] = [

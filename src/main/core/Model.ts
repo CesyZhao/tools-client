@@ -87,6 +87,11 @@ class Model extends Base {
     }
 
     const modelPath = this.getModelPath()
+    // 确保模型目录存在
+    if (!fs.existsSync(modelPath)) {
+      fs.mkdirSync(modelPath, { recursive: true })
+    }
+    // 模型目录
     const modelDir = path.join(modelPath, modelName)
 
     // 确保模型目录存在

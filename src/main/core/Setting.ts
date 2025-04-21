@@ -99,7 +99,7 @@ class Setting extends Base {
     return defaultValue as T
   }
 
-  set<T>(key: string, value: T): void {
+  set(key: string, value: string | number | boolean | undefined): void {
     // 更新设置组
     let updated = false
     for (const group of this.settings) {

@@ -27,7 +27,9 @@ const messages = {
       tip1: '拖入图片、文件夹',
       tip2: '或者粘贴图片',
       button: '上传图片',
-      modelLoading: '模型加载中...'
+      modelLoading: '模型加载中...',
+      modelLoadFailed: '模型加载失败',
+      retry: '重试'
     },
     settings: {
       paths: {
@@ -119,7 +121,9 @@ const messages = {
       tip1: 'Drag an image or folder',
       tip2: 'Or paste an image',
       button: 'Upload Image',
-      modelLoading: 'Model loading...'
+      modelLoading: 'Model loading...',
+      modelLoadFailed: 'Model loading failed',
+      retry: 'Retry'
     },
     settings: {
       paths: {

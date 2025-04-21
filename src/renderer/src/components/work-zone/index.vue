@@ -1,15 +1,25 @@
 <template>
   <div class="work-zone">
-    <a-spin v-show="modelLoading" :size="32" :tip="$t('work-zone.modelLoading')"></a-spin>
+    <div v-show="modelLoading || modelLoadFailed" class="model-status-container">
+      <a-spin v-if="modelLoading" :size="32" :tip="$t('work-zone.modelLoading')"></a-spin>
+
+      <div v-if="modelLoadFailed" class="model-load-failed">
+        <p>{{ $t('work-zone.modelLoadFailed') }}</p>
+        <a-button type="primary" @click="retryLoadModel">
+          {{ $t('work-zone.retry') }}
+        </a-button>
+      </div>
+    </div>
 
     <div
-      v-show="!modelLoading"
+      v-show="!modelLoading && !modelLoadFailed"
       class="upload-area"
       @dragover.prevent
       @drop.prevent="handleDrop"
       @paste="handlePaste"
       @click="triggerUpload"
     >
+      <!-- 现有的上传区域内容 -->
       <div class="upload-content">
         <i class="iconfont icon-tupian"></i>
         <div class="upload-text">
@@ -45,18 +55,41 @@ const setting = bridge.getModule('setting')
 
 const { selectedKey } = defineProps(['selectedKey'])
 const modelLoading = ref(false)
+const modelLoadFailed = ref(false)
 const currentProcessor = ref<Processor | null>(null)
 
 onMounted(async () => {
   const modelPath = await setting.get('modelPath')
-  const processor = new Processor(modelPath)
+  const enableGPU = await setting.get('enableGPU')
+  const processor = new Processor(modelPath, enableGPU as boolean)
   currentProcessor.value = processor
 })
 
-watchEffect(async () => {
+const loadModel = async (): Promise<void> => {
+  if (!currentProcessor.value) return
+
   modelLoading.value = true
-  await currentProcessor?.value?.applyModel(selectedKey)
-  modelLoading.value = false
+  modelLoadFailed.value = false
+
+  try {
+    console.log(currentProcessor.value, '----------')
+    await currentProcessor.value.applyModel(selectedKey)
+    modelLoadFailed.value = false
+  } catch (error) {
+    console.error('模型加载失败:', error)
+    modelLoadFailed.value = true
+  } finally {
+    modelLoading.value = false
+  }
+}
+
+const retryLoadModel = (): void => {
+  loadModel()
+}
+
+watchEffect(() => {
+  if (!currentProcessor.value) return
+  loadModel()
 })
 
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -106,6 +139,25 @@ const handleFileChange = (e: Event): void => {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .model-status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .model-load-failed {
+    text-align: center;
+
+    p {
+      margin-bottom: 16px;
+      font-size: 16px;
+      color: #ff4d4f;
+    }
+  }
 
   .upload-area {
     width: 100%;
