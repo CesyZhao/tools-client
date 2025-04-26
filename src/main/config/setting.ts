@@ -21,7 +21,8 @@ export const defaultSettings: SettingGroup[] = [
         descriptionKey: 'settings.paths.modelPath.description',
         defaultValue: defaultModelPath,
         type: 'path',
-        value: undefined
+        value: undefined,
+        configable: false
       },
       {
         key: 'savePath',

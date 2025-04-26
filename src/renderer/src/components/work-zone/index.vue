@@ -72,7 +72,6 @@ const loadModel = async (): Promise<void> => {
   modelLoadFailed.value = false
 
   try {
-    console.log(currentProcessor.value, '----------')
     await currentProcessor.value.applyModel(selectedKey)
     modelLoadFailed.value = false
   } catch (error) {

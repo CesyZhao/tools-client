@@ -53,7 +53,7 @@ export class Log extends Base {
 
     this.config = {
       level: LogLevel.INFO,
-      logToFile: false,
+      logToFile: true,
       logDir: path.join(app.getPath('userData'), 'logs'),
       maxFileSize: 10 * 1024 * 1024, // 默认10MB
       maxFiles: 5,

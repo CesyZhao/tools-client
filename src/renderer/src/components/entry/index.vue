@@ -201,8 +201,6 @@ const checkModels = async (): Promise<void> => {
     // 去重
     const uniqueModels = [...new Set(allModels)]
 
-    log.info('uniqueModels', uniqueModels)
-
     // 检查模型下载情况
     const status = await envModule.checkModels(uniqueModels)
 

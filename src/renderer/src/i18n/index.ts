@@ -47,7 +47,8 @@ const messages = {
         title: '性能设置',
         enableGPU: {
           title: '启用 GPU 加速',
-          description: '使用 GPU 加速模型推理，提高处理速度。如果遇到兼容性问题，可以关闭此选项。'
+          description:
+            '使用 GPU 加速模型推理，提高处理速度。如果遇到兼容性问题，可以关闭此选项。更改此设置需要重启应用。'
         }
       },
       // 添加设置组件的词条
@@ -62,7 +63,9 @@ const messages = {
         saved: '设置已保存',
         saveFailed: '保存设置失败',
         resetSuccess: '设置已重置为默认值',
-        resetFailed: '重置设置失败'
+        resetFailed: '重置设置失败',
+        restartRequired: '设置已保存，应用将重新启动以应用更改',
+        unsavedChanges: '有未保存的更改，确定要放弃吗？'
       }
     },
     entry: {
@@ -142,7 +145,7 @@ const messages = {
         enableGPU: {
           title: 'Enable GPU Acceleration',
           description:
-            'Use GPU acceleration for model inference, improving processing speed. If you encounter compatibility issues, you can turn off this option.'
+            'Use GPU acceleration for model inference, improving processing speed. If you encounter compatibility issues, you can turn off this option. Changing this setting requires restarting the application.'
         }
       },
       // 添加设置组件的英文词条
@@ -151,6 +154,8 @@ const messages = {
       select: 'Select',
       confirm: 'Confirm',
       messages: {
+        unsavedChanges: 'You have unsaved changes, are you sure you want to discard them?',
+        restartRequired: 'Settings saved, the application will restart to apply changes',
         pathUpdated: 'Path updated',
         pathSelectFailed: 'Failed to select path',
         loadFailed: 'Failed to load settings',

@@ -50,11 +50,23 @@
             </div>
           </div>
           <div class="setting-footer">
-            <a-button type="primary" @click="closePopover">{{ $t('settings.confirm') }}</a-button>
+            <a-button type="primary" @click="saveAllSettings">{{
+              $t('settings.confirm')
+            }}</a-button>
           </div>
         </div>
       </div>
     </Transition>
+    <!-- 未保存更改确认对话框 -->
+    <a-modal
+      v-model:visible="confirmModalVisible"
+      :title="$t('settings.messages.unsavedChangesTitle')"
+      simple
+      @cancel="handleConfirmCancel"
+      @before-ok="handleConfirmOk"
+    >
+      <p>{{ $t('settings.messages.unsavedChanges') }}</p>
+    </a-modal>
   </div>
 </template>
 
@@ -74,17 +86,39 @@ const { t } = useI18n()
 
 const visible = defineModel<boolean>()
 const appSetting = ref<SettingGroup[]>([])
+const changedSettings = ref<Map<string, unknown>>(new Map())
+const originalSettings = ref<Map<string, unknown>>(new Map())
+const confirmModalVisible = ref(false)
 
 // 添加缺失的方法
 const handlePopoverVisibleChange = (): void => {
   visible.value = !visible.value
   if (visible.value) {
     initSettings()
+    // 重置变更记录
+    changedSettings.value.clear()
   }
 }
 
 const closePopover = (): void => {
+  // 如果有未保存的更改，显示确认对话框
+  if (changedSettings.value.size > 0) {
+    confirmModalVisible.value = true
+  } else {
+    visible.value = false
+  }
+}
+
+// 处理确认对话框的取消按钮
+const handleConfirmCancel = (): void => {
+  confirmModalVisible.value = false
+}
+
+// 处理确认对话框的确认按钮
+const handleConfirmOk = (done: () => void): void => {
   visible.value = false
+  changedSettings.value.clear()
+  done()
 }
 
 // 实现路径选择功能
@@ -92,9 +126,9 @@ const handlePathSelect = async (setting): Promise<void> => {
   try {
     const selectedPath = await fileModule.selectFolder()
     if (selectedPath) {
-      await settingModule.set(setting.key, selectedPath)
       setting.value = selectedPath
-      Message.success(t('settings.messages.pathUpdated'))
+      // 记录变更
+      changedSettings.value.set(setting.key, selectedPath)
     }
   } catch (error) {
     console.error('选择路径失败:', error)
@@ -112,6 +146,14 @@ const initSettings = async (): Promise<void> => {
         if (item.value === undefined) {
           item.value = item.defaultValue
         }
+
+        // 为 GPU 设置添加重启标记
+        if (item.key === 'enableGPU') {
+          item.requiresRestart = true
+        }
+
+        // 保存原始设置值
+        originalSettings.value.set(item.key, item.value)
       })
     })
 
@@ -122,10 +164,48 @@ const initSettings = async (): Promise<void> => {
   }
 }
 
-const handleValueChange = async (key: string, value): Promise<void> => {
+const handleValueChange = (key: string, value): void => {
+  // 只记录变更，不立即保存
+  changedSettings.value.set(key, value)
+}
+
+// 保存所有设置
+const saveAllSettings = async (): Promise<void> => {
+  if (changedSettings.value.size === 0) {
+    closePopover()
+    return
+  }
+
   try {
-    await settingModule.set(key, value)
-    Message.success(t('settings.messages.saved'))
+    // 检查是否有需要重启的设置
+    let needsRestart = false
+
+    // 保存所有变更的设置
+    for (const [key, value] of changedSettings.value.entries()) {
+      await settingModule.set(key, value)
+
+      // 检查是否是 GPU 设置并且值发生了变化
+      if (key === 'enableGPU' && originalSettings.value.get(key) !== value) {
+        needsRestart = true
+      }
+    }
+    // 清空变更记录
+    changedSettings.value.clear()
+
+    // 如果需要重启
+    if (needsRestart) {
+      Message.warning({
+        content: t('settings.messages.restartRequired'),
+        duration: 3000,
+        onClose: () => {
+          // 重启应用
+          window.location.reload()
+        }
+      })
+    } else {
+      Message.success(t('settings.messages.saved'))
+      closePopover()
+    }
   } catch (error) {
     console.error('保存设置失败:', error)
     Message.error(t('settings.messages.saveFailed'))
@@ -136,6 +216,8 @@ const handleReset = async (): Promise<void> => {
   try {
     await settingModule.reset()
     await initSettings()
+    // 清空变更记录
+    changedSettings.value.clear()
     Message.success(t('settings.messages.resetSuccess'))
   } catch (error) {
     console.error('重置设置失败:', error)
