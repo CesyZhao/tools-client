@@ -1,5 +1,5 @@
 <template>
-  <div v-click-outside="closePopover">
+  <div>
     <span class="iconfont icon-setting" @click="handlePopoverVisibleChange"></span>
     <Transition name="modal">
       <div v-show="visible" class="setting-mask">
@@ -7,10 +7,6 @@
           <div class="setting-header">
             <h2>{{ $t('settings.title') }}</h2>
             <div class="header-actions">
-              <a-button type="text" status="warning" @click="handleReset">
-                <template #icon><icon-refresh /></template>
-                {{ $t('settings.reset') }}
-              </a-button>
               <a-button type="text" @click="closePopover">
                 <template #icon><icon-close /></template>
               </a-button>
@@ -45,44 +41,48 @@
                     size="small"
                     @change="value => handleValueChange(setting.key, value)"
                   />
+                  <a-select
+                    v-else-if="setting.type === 'select'"
+                    v-model="setting.value"
+                    size="small"
+                    @change="value => handleValueChange(setting.key, value)"
+                  >
+                    <a-option
+                      v-for="option in setting.options"
+                      :key="option.value"
+                      :value="option.value"
+                    >
+                      {{ $t(option.label) }}
+                    </a-option>
+                  </a-select>
                 </div>
               </div>
             </div>
           </div>
           <div class="setting-footer">
-            <a-button type="primary" @click="saveAllSettings">{{
-              $t('settings.confirm')
-            }}</a-button>
+            <a-button status="warning" class="button-reset" @click="handleReset">
+              {{ $t('settings.reset') }}
+            </a-button>
+            <a-button type="primary" @click="saveAllSettings">{{ $t('settings.save') }}</a-button>
           </div>
         </div>
       </div>
     </Transition>
-    <!-- 未保存更改确认对话框 -->
-    <a-modal
-      v-model:visible="confirmModalVisible"
-      :title="$t('settings.messages.unsavedChangesTitle')"
-      simple
-      @cancel="handleConfirmCancel"
-      @before-ok="handleConfirmOk"
-    >
-      <p>{{ $t('settings.messages.unsavedChanges') }}</p>
-    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { IconQuestionCircleFill, IconRefresh } from '@arco-design/web-vue/es/icon'
+import { IconQuestionCircleFill } from '@arco-design/web-vue/es/icon'
 import { ref, onMounted } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import { useI18n } from 'vue-i18n'
-import vClickOutside from '../../directives/click-outside'
 import Bridge from '../../ipc/Bridge'
 import { SettingGroup } from '../../../../common/definitions/setting'
 
 const bridge = new Bridge()
 const settingModule = bridge.getModule('setting')
 const fileModule = bridge.getModule('file')
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const visible = defineModel<boolean>()
 const appSetting = ref<SettingGroup[]>([])
@@ -109,18 +109,6 @@ const closePopover = (): void => {
   }
 }
 
-// 处理确认对话框的取消按钮
-const handleConfirmCancel = (): void => {
-  confirmModalVisible.value = false
-}
-
-// 处理确认对话框的确认按钮
-const handleConfirmOk = (done: () => void): void => {
-  visible.value = false
-  changedSettings.value.clear()
-  done()
-}
-
 // 实现路径选择功能
 const handlePathSelect = async (setting): Promise<void> => {
   try {
@@ -136,25 +124,56 @@ const handlePathSelect = async (setting): Promise<void> => {
   }
 }
 
+const handleValueChange = async (key: string, value): Promise<void> => {
+  // 只记录变更，不立即保存
+  changedSettings.value.set(key, value)
+}
+
+// 应用主题
+const applyTheme = (theme: string): void => {
+  let result = theme
+  if (theme === 'auto') {
+    // 根据系统主题自动切换
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    result = prefersDark ? 'dark' : 'light'
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  result === 'dark'
+    ? document.body.setAttribute('arco-theme', 'dark')
+    : document.body.removeAttribute('arco-theme')
+
+  document.documentElement.classList.toggle('dark', result === 'dark')
+  localStorage.setItem('theme', result)
+}
+
+// 初始化设置时，应用主题和语言
 const initSettings = async (): Promise<void> => {
   try {
     const settingsData = await settingModule.getAll()
 
     // 确保每个设置项都有值，如果没有值就使用默认值
     settingsData.forEach(category => {
-      category.items.forEach(item => {
-        if (item.value === undefined) {
-          item.value = item.defaultValue
-        }
+      category.items = category.items
+        .filter(item => item.configable !== false)
+        .map(item => {
+          if (item.value === undefined) {
+            item.value = item.defaultValue
+          }
 
-        // 为 GPU 设置添加重启标记
-        if (item.key === 'enableGPU') {
-          item.requiresRestart = true
-        }
+          // 保存原始设置值
+          originalSettings.value.set(item.key, item.value)
 
-        // 保存原始设置值
-        originalSettings.value.set(item.key, item.value)
-      })
+          // 应用主题和语言设置
+          if (item.key === 'theme') {
+            applyTheme(item.value as string)
+          }
+          if (item.key === 'language') {
+            locale.value = item.value as string
+          }
+
+          return item
+        })
     })
 
     appSetting.value = settingsData
@@ -164,17 +183,9 @@ const initSettings = async (): Promise<void> => {
   }
 }
 
-const handleValueChange = (key: string, value): void => {
-  // 只记录变更，不立即保存
-  changedSettings.value.set(key, value)
-}
-
 // 保存所有设置
 const saveAllSettings = async (): Promise<void> => {
-  if (changedSettings.value.size === 0) {
-    closePopover()
-    return
-  }
+  closePopover()
 
   try {
     // 检查是否有需要重启的设置
@@ -184,8 +195,9 @@ const saveAllSettings = async (): Promise<void> => {
     for (const [key, value] of changedSettings.value.entries()) {
       await settingModule.set(key, value)
 
+      const keysRequiredRestart = ['language', 'theme', 'enableGPU']
       // 检查是否是 GPU 设置并且值发生了变化
-      if (key === 'enableGPU' && originalSettings.value.get(key) !== value) {
+      if (keysRequiredRestart.includes(key) && originalSettings.value.get(key) !== value) {
         needsRestart = true
       }
     }
@@ -194,17 +206,23 @@ const saveAllSettings = async (): Promise<void> => {
 
     // 如果需要重启
     if (needsRestart) {
+      let countdown = 3
       Message.warning({
-        content: t('settings.messages.restartRequired'),
-        duration: 3000,
-        onClose: () => {
-          // 重启应用
-          window.location.reload()
-        }
+        content: t('settings.messages.restartRequired', [countdown--]),
+        duration: 1000
       })
+      setInterval(() => {
+        Message.warning({
+          content: t('settings.messages.restartRequired', [countdown--]),
+          duration: 1000,
+          onClose: () => {
+            // 重启应用
+            if (countdown === 0) window.location.reload()
+          }
+        })
+      }, 1000)
     } else {
       Message.success(t('settings.messages.saved'))
-      closePopover()
     }
   } catch (error) {
     console.error('保存设置失败:', error)
@@ -257,7 +275,7 @@ onMounted(() => {
 .setting-popper {
   position: relative;
   width: 480px;
-  max-height: 90vh;
+  max-height: 70vh;
   background: var(--color-bg-1);
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -302,6 +320,9 @@ onMounted(() => {
   border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
+  .button-reset {
+    margin-right: 12px;
+  }
 }
 
 .setting-category {

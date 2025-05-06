@@ -34,11 +34,6 @@ onMounted(async () => {
 </script>
 
 <style>
-body {
-  background-color: var(--color-bg-1);
-  color: var(--color-text-1);
-}
-
 .theme-switch {
   cursor: pointer;
 }

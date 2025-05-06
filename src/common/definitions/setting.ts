@@ -6,6 +6,7 @@ export interface SettingItem {
   configable?: boolean
   type: 'string' | 'boolean' | 'number' | 'select' | 'path'
   value: string | number | boolean | undefined
+  options?: { value: string | number | boolean; label: string }[]
 }
 
 export interface SettingOptions {

@@ -12,6 +12,37 @@ const defaultSavePath = path.join(app.getPath('downloads'), 'tools-client')
 
 export const defaultSettings: SettingGroup[] = [
   {
+    key: 'appearance',
+    titleKey: 'settings.appearance.title',
+    items: [
+      {
+        key: 'theme',
+        titleKey: 'settings.appearance.theme.title',
+        descriptionKey: 'settings.appearance.theme.description',
+        type: 'select',
+        defaultValue: 'auto',
+        value: undefined,
+        options: [
+          { value: 'auto', label: 'settings.appearance.theme.auto' },
+          { value: 'light', label: 'settings.appearance.theme.light' },
+          { value: 'dark', label: 'settings.appearance.theme.dark' }
+        ]
+      },
+      {
+        key: 'language',
+        titleKey: 'settings.appearance.language.title',
+        descriptionKey: 'settings.appearance.language.description',
+        type: 'select',
+        defaultValue: 'zh',
+        value: undefined,
+        options: [
+          { value: 'zh', label: 'settings.appearance.language.zh' },
+          { value: 'en', label: 'settings.appearance.language.en' }
+        ]
+      }
+    ]
+  },
+  {
     key: 'paths',
     titleKey: 'settings.paths.title',
     items: [

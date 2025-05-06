@@ -32,6 +32,22 @@ const messages = {
       retry: '重试'
     },
     settings: {
+      appearance: {
+        title: '外观',
+        theme: {
+          title: '主题',
+          description: '设置应用程序的显示主题',
+          auto: '跟随系统',
+          light: '亮色',
+          dark: '暗色'
+        },
+        language: {
+          title: '语言',
+          description: '设置应用程序的显示语言',
+          zh: '中文',
+          en: 'English'
+        }
+      },
       paths: {
         title: '路径设置',
         modelPath: {
@@ -55,7 +71,7 @@ const messages = {
       title: '设置',
       reset: '重置',
       select: '选择',
-      confirm: '确定',
+      save: '保存',
       messages: {
         pathUpdated: '路径已更新',
         pathSelectFailed: '选择路径失败',
@@ -64,7 +80,7 @@ const messages = {
         saveFailed: '保存设置失败',
         resetSuccess: '设置已重置为默认值',
         resetFailed: '重置设置失败',
-        restartRequired: '设置已保存，应用将重新启动以应用更改',
+        restartRequired: '设置已保存，应用将在{0}秒后重新启动以应用更改',
         unsavedChanges: '有未保存的更改，确定要放弃吗？'
       }
     },
@@ -129,6 +145,22 @@ const messages = {
       retry: 'Retry'
     },
     settings: {
+      appearance: {
+        title: 'Appearance',
+        theme: {
+          title: 'Theme',
+          description: 'Set the display theme of the application',
+          auto: 'Auto (Follow System)',
+          light: 'Light',
+          dark: 'Dark'
+        },
+        language: {
+          title: 'Language',
+          description: 'Set the display language of the application',
+          zh: '中文',
+          en: 'English'
+        }
+      },
       paths: {
         title: 'Path Settings',
         modelPath: {
@@ -152,10 +184,11 @@ const messages = {
       title: 'Settings',
       reset: 'Reset',
       select: 'Select',
-      confirm: 'Confirm',
+      save: 'Save',
       messages: {
         unsavedChanges: 'You have unsaved changes, are you sure you want to discard them?',
-        restartRequired: 'Settings saved, the application will restart to apply changes',
+        restartRequired:
+          'Settings saved, the application will restart in {0} seconds to apply changes',
         pathUpdated: 'Path updated',
         pathSelectFailed: 'Failed to select path',
         loadFailed: 'Failed to load settings',
