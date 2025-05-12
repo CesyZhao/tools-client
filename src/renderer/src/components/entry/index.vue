@@ -380,7 +380,7 @@ onMounted(() => {
 }
 
 .step-description {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--color-text-3);
   transition: all 0.3s ease;
 }

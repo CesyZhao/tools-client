@@ -17,7 +17,7 @@ import Setting from '@renderer/components/setting/index.vue'
 <style lang="less" scoped>
 .header {
   display: grid;
-  grid-template-columns: auto 60px;
+  grid-template-columns: auto 32px;
   height: 72px;
   width: 100%;
   border-bottom: 1px solid var(--color-neutral-3);

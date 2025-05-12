@@ -100,9 +100,9 @@ const handlePopoverVisibleChange = (): void => {
   }
 }
 
-const closePopover = (): void => {
+const closePopover = (force?: boolean): void => {
   // 如果有未保存的更改，显示确认对话框
-  if (changedSettings.value.size > 0) {
+  if (changedSettings.value.size > 0 && !force) {
     confirmModalVisible.value = true
   } else {
     visible.value = false
@@ -185,7 +185,7 @@ const initSettings = async (): Promise<void> => {
 
 // 保存所有设置
 const saveAllSettings = async (): Promise<void> => {
-  closePopover()
+  closePopover(true)
 
   try {
     // 检查是否有需要重启的设置
