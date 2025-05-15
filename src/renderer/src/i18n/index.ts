@@ -29,6 +29,7 @@ const messages = {
       button: '上传图片',
       modelLoading: '模型加载中...',
       modelLoadFailed: '模型加载失败',
+      modelLoadFailedTip: '模型加载失败，请检查网络连接或模型文件是否完整',
       retry: '重试'
     },
     settings: {
@@ -142,6 +143,8 @@ const messages = {
       button: 'Upload Image',
       modelLoading: 'Model loading...',
       modelLoadFailed: 'Model loading failed',
+      modelLoadFailedTip:
+        'Failed to load model. Please check your network connection or model file integrity',
       retry: 'Retry'
     },
     settings: {

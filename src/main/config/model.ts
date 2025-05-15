@@ -7,7 +7,7 @@ const modelConfigList: ModelConfig[] = [
   },
   {
     modelName: ModelKey.Xenova,
-    files: ['onnx/model_quantized.onnx', 'preprocessor_config.json']
+    files: ['onnx/model.onnx', 'preprocessor_config.json']
   }
   // 可以添加更多模型配置
 ]

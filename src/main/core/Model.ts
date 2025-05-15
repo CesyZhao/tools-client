@@ -117,6 +117,7 @@ class Model extends Base {
       let totalFilesSize = 0
       let downloadedSize = 0
       const abortControllers: AbortController[] = []
+      const downloadedFiles: string[] = [] // 记录已下载的文件路径
 
       // 创建一个函数来更新总进度
       const updateTotalProgress = (chunkSize: number): void => {
@@ -183,6 +184,7 @@ class Model extends Base {
 
                 // 处理文件路径，保留目录结构
                 const filePath = path.join(modelDir, fileName)
+                downloadedFiles.push(filePath) // 记录已下载的文件路径
 
                 // 确保文件的目录存在
                 const fileDir = path.dirname(filePath)
@@ -242,6 +244,8 @@ class Model extends Base {
               log.error('取消下载时出错:', e)
             }
           })
+          // 清理已下载的文件
+          this.cleanupModelDirectory(modelDir, downloadedFiles)
         },
         progress
       })
@@ -270,6 +274,10 @@ class Model extends Base {
           progress.status = 'error'
           progress.message = '部分文件下载失败'
           this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
+
+          // 清理已下载的文件
+          this.cleanupModelDirectory(modelDir, downloadedFiles)
+
           this.downloadingModels.delete(modelName)
           return false
         }
@@ -278,25 +286,76 @@ class Model extends Base {
         progress.status = 'error'
         progress.message = error.message
         this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
+
+        // 清理已下载的文件
+        this.cleanupModelDirectory(modelDir, downloadedFiles)
+
         this.downloadingModels.delete(modelName)
         return false
       }
-      // 所有文件下载完成
-      progress.status = 'completed'
-      progress.progress = 1
-      this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
-
-      // 从下载列表中移除
-      this.downloadingModels.delete(modelName)
-
-      return true
     } catch (error) {
       log.error(`下载模型 ${modelName} 失败:`, error)
       progress.status = 'error'
       progress.message = error.message
       this.sendEvent(BridgeEvent.MODEL_DOWNLOAD_PROGRESS, progress)
+
+      // 清理模型目录
+      this.cleanupModelDirectory(modelDir)
+
       this.downloadingModels.delete(modelName)
       return false
+    }
+  }
+
+  /**
+   * 清理模型目录
+   * @param modelDir 模型目录
+   * @param filesToDelete 指定要删除的文件列表，如果不提供则删除整个目录
+   */
+  private cleanupModelDirectory(modelDir: string, filesToDelete?: string[]): void {
+    try {
+      if (!fs.existsSync(modelDir)) {
+        return
+      }
+
+      if (filesToDelete && filesToDelete.length > 0) {
+        // 只删除指定的文件
+        log.info(`清理模型目录中的指定文件: ${modelDir}`)
+        filesToDelete.forEach(filePath => {
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath)
+            log.info(`已删除文件: ${filePath}`)
+          }
+        })
+      } else {
+        // 删除整个目录
+        log.info(`清理整个模型目录: ${modelDir}`)
+        this.removeDirectory(modelDir)
+        log.info(`已删除目录: ${modelDir}`)
+      }
+    } catch (error) {
+      log.error(`清理模型目录失败:`, error)
+    }
+  }
+
+  /**
+   * 递归删除目录
+   * @param dirPath 目录路径
+   */
+  private removeDirectory(dirPath: string): void {
+    if (fs.existsSync(dirPath)) {
+      fs.readdirSync(dirPath).forEach(file => {
+        const curPath = path.join(dirPath, file)
+        if (fs.lstatSync(curPath).isDirectory()) {
+          // 递归删除子目录
+          this.removeDirectory(curPath)
+        } else {
+          // 删除文件
+          fs.unlinkSync(curPath)
+        }
+      })
+      // 删除空目录
+      fs.rmdirSync(dirPath)
     }
   }
 

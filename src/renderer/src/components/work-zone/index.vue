@@ -4,8 +4,11 @@
       <a-spin v-if="modelLoading" :size="32" :tip="$t('work-zone.modelLoading')"></a-spin>
 
       <div v-if="modelLoadFailed" class="model-load-failed">
+        <icon-exclamation-circle-fill class="error-icon" />
         <p>{{ $t('work-zone.modelLoadFailed') }}</p>
-        <a-button type="primary" @click="retryLoadModel">
+        <p class="error-tip">{{ $t('work-zone.modelLoadFailedTip') }}</p>
+        <a-button type="text" @click="retryLoadModel">
+          <template #icon><icon-refresh /></template>
           {{ $t('work-zone.retry') }}
         </a-button>
       </div>
@@ -150,11 +153,38 @@ const handleFileChange = (e: Event): void => {
 
   .model-load-failed {
     text-align: center;
+    padding: 32px;
+    border-radius: 8px;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease-in-out;
+
+    .error-icon {
+      font-size: 48px;
+      color: rgb(var(--danger-6));
+      margin-bottom: 16px;
+    }
 
     p {
       margin-bottom: 16px;
-      font-size: 16px;
-      color: #ff4d4f;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-text-1);
+    }
+
+    .error-tip {
+      font-size: 14px;
+      color: var(--color-text-3);
+      margin-bottom: 24px;
+    }
+
+    .arco-btn {
+      padding: 8px 24px;
+      font-size: 14px;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
     }
   }
 
@@ -223,6 +253,17 @@ const handleFileChange = (e: Event): void => {
 
   .file-input {
     display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>
