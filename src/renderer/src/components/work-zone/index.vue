@@ -101,7 +101,6 @@ const handleUpload = (file: File): void => {
     alert('图片大小不能超过10MB')
     return
   }
-  console.log(currentProcessor.value, '------------------')
   currentProcessor.value?.process(file)
 }
 
