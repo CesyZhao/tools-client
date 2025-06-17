@@ -36,8 +36,8 @@ class Processor {
     }
   }
 
-  process(args): void {
-    this.currentModule.process(args)
+  process(args): Promise<unknown> {
+    return this.currentModule.process(args)
   }
 }
 

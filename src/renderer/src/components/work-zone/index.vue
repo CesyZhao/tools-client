@@ -96,12 +96,13 @@ watchEffect(() => {
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
-const handleUpload = (file: File): void => {
+const handleUpload = async (file: File): Promise<void> => {
   if (file.size > 10 * 1024 * 1024) {
     alert('图片大小不能超过10MB')
     return
   }
-  currentProcessor.value?.process(file)
+  const result = await currentProcessor.value?.process(file)
+  console.log(result, '==========')
 }
 
 const handleDrop = (e: DragEvent): void => {
