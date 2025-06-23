@@ -23,7 +23,7 @@
       @click="triggerUpload"
     >
       <!-- 现有的上传区域内容 -->
-      <div class="upload-content">
+      <div v-if="!currentImage" class="upload-content">
         <i class="iconfont icon-tupian"></i>
         <div class="upload-text">
           <p class="title">
@@ -36,6 +36,7 @@
           {{ $t('work-zone.button') }}
         </button>
       </div>
+      <ProcessedImage v-else :image="currentImage" />
       <input
         ref="fileInput"
         type="file"
@@ -52,6 +53,8 @@
 import { onMounted, ref, watchEffect } from 'vue'
 import Processor from '@renderer/processor'
 import Bridge from '@renderer/ipc/Bridge'
+import ProcessedImage from '@renderer/components/image/index.vue'
+import { IProcessedImage } from '@renderer/definitions/module'
 
 const bridge = new Bridge()
 const setting = bridge.getModule('setting')
@@ -96,13 +99,22 @@ watchEffect(() => {
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
+const currentImage = ref<IProcessedImage | null>(null)
+
 const handleUpload = async (file: File): Promise<void> => {
   if (file.size > 10 * 1024 * 1024) {
     alert('图片大小不能超过10MB')
     return
   }
+  const image = {
+    originalImage: file
+  }
+  currentImage.value = image
   const result = await currentProcessor.value?.process(file)
-  console.log(result, '==========')
+  currentImage.value = {
+    ...image,
+    processedImage: result as File
+  }
 }
 
 const handleDrop = (e: DragEvent): void => {
