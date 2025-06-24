@@ -37,6 +37,7 @@
         </button>
       </div>
       <ProcessedImage v-else :image="currentImage" />
+
       <input
         ref="fileInput"
         type="file"
