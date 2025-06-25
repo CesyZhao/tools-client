@@ -349,7 +349,7 @@ onBeforeUnmount(() => {
 
 .processed-images-list {
   width: 100%;
-  height: 160px;
+  height: 80px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -366,8 +366,8 @@ onBeforeUnmount(() => {
 }
 
 .processed-image-item {
-  width: 120px;
-  height: 160px;
+  width: 80px;
+  height: 80px;
   margin-right: 10px;
   display: flex;
   justify-content: center;

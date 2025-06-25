@@ -36,7 +36,7 @@
           {{ $t('work-zone.button') }}
         </button>
       </div>
-      <ProcessedImage v-else :image="currentImage" />
+      <ProcessedImage v-else :image="currentImage" :processed-images-list="processedImageList" />
 
       <input
         ref="fileInput"
@@ -102,6 +102,8 @@ const fileInput = ref<HTMLInputElement | null>(null)
 
 const currentImage = ref<IProcessedImage | null>(null)
 
+const processedImageList = ref<IProcessedImage[]>([])
+
 const handleUpload = async (file: File): Promise<void> => {
   if (file.size > 10 * 1024 * 1024) {
     alert('图片大小不能超过10MB')
@@ -111,11 +113,14 @@ const handleUpload = async (file: File): Promise<void> => {
     originalImage: file
   }
   currentImage.value = image
-  const result = await currentProcessor.value?.process(file)
-  currentImage.value = {
-    ...image,
-    processedImage: result as File
+  const processedImage: IProcessedImage = {
+    ...image
   }
+  processedImageList.value.push(processedImage)
+  const result = await currentProcessor.value?.process(file)
+  processedImage.processedImage = result as File
+  currentImage.value = processedImage
+  console.log(processedImageList, '-------')
 }
 
 const handleDrop = (e: DragEvent): void => {
