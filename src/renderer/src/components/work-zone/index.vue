@@ -17,10 +17,11 @@
     <div
       v-show="!modelLoading && !modelLoadFailed"
       class="upload-area"
+      :class="{ empty: !currentImage }"
       @dragover.prevent
       @drop.prevent="handleDrop"
       @paste="handlePaste"
-      @click="triggerUpload"
+      @click="triggerUpload(false)"
     >
       <!-- 现有的上传区域内容 -->
       <div v-if="!currentImage" class="upload-content">
@@ -36,7 +37,13 @@
           {{ $t('work-zone.button') }}
         </button>
       </div>
-      <ProcessedImage v-else :image="currentImage" :processed-images-list="processedImageList" />
+      <ProcessedImage
+        v-else
+        :image="currentImage"
+        :processed-images-list="processedImageList"
+        @add-image="triggerUpload"
+        @select-image="selectImage"
+      />
 
       <input
         ref="fileInput"
@@ -56,6 +63,7 @@ import Processor from '@renderer/processor'
 import Bridge from '@renderer/ipc/Bridge'
 import ProcessedImage from '@renderer/components/image/index.vue'
 import { IProcessedImage } from '@renderer/definitions/module'
+import { getUUID } from '@renderer/utils/string'
 
 const bridge = new Bridge()
 const setting = bridge.getModule('setting')
@@ -110,7 +118,8 @@ const handleUpload = async (file: File): Promise<void> => {
     return
   }
   const image = {
-    originalImage: file
+    originalImage: file,
+    id: getUUID()
   }
   currentImage.value = image
   const processedImage: IProcessedImage = {
@@ -140,8 +149,13 @@ const handlePaste = (e: ClipboardEvent): void => {
   }
 }
 
-const triggerUpload = (): void => {
+const triggerUpload = (force: boolean = false): void => {
+  if (currentImage.value && !force) return
   fileInput.value?.click()
+}
+
+const selectImage = (image: IProcessedImage): void => {
+  currentImage.value = image
 }
 
 const handleFileChange = (e: Event): void => {
@@ -149,6 +163,7 @@ const handleFileChange = (e: Event): void => {
   const files = target.files
   if (files?.length) {
     handleUpload(files[0])
+    target.value = ''
   }
 }
 </script>
@@ -209,12 +224,12 @@ const handleFileChange = (e: Event): void => {
   .upload-area {
     width: 100%;
     height: 100%;
-    cursor: pointer;
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
 
-    &:hover {
+    &.empty:hover {
+      cursor: pointer;
       border-color: #409eff;
       background: rgba(64, 158, 255, 0.05);
     }

@@ -37,19 +37,22 @@
         :disabled="scrollPosition <= 0"
         @click="scrollLeft"
       >
-        &lt;
+        <i class="iconfont icon-left"></i>
       </button>
 
       <div ref="listContainerRef" class="processed-images-list" @scroll="handleScroll">
         <div ref="listWrapperRef" class="processed-images-wrapper">
+          <div class="processed-image-item add-icon" @click="addImage">
+            <i class="iconfont icon-tianjia"></i>
+          </div>
           <div
-            v-for="(image, index) in processedImagesList"
-            :key="index"
+            v-for="img in processedImagesList"
+            :key="img.id"
             class="processed-image-item"
-            :class="{ active: isActiveImage(image) }"
-            @click="selectImage(image)"
+            :class="{ active: isActiveImage(img) }"
+            @click="selectImage(img)"
           >
-            <img :src="getImageUrl(image)" :alt="`处理图片 ${index + 1}`" />
+            <img :src="getImageUrl(img)" :alt="`处理图片 ${img.id}`" />
           </div>
         </div>
       </div>
@@ -60,7 +63,7 @@
         :disabled="scrollPosition >= maxScrollPosition"
         @click="scrollRight"
       >
-        &gt;
+        <i class="iconfont icon-right"></i>
       </button>
     </div>
   </div>
@@ -78,6 +81,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'select-image', image: IProcessedImage): void
+  (e: 'add-image', force: boolean): void
 }>()
 
 // refs
@@ -119,17 +123,12 @@ const clearObjectURLs = (): void => {
 
 // 获取图片URL
 const getImageUrl = (image: IProcessedImage): string => {
-  if (image.processedImage) {
-    return createObjectURL(image.processedImage)
-  } else if (image.originalImage) {
-    return createObjectURL(image.originalImage)
-  }
-  return ''
+  return createObjectURL(image.originalImage)
 }
 
 // 判断是否为当前选中的图片
 const isActiveImage = (image: IProcessedImage): boolean => {
-  return props.image === image
+  return props.image.id === image.id
 }
 
 // 选择图片
@@ -238,6 +237,11 @@ const handleResize = (): void => {
   updateMaxScrollPosition()
 }
 
+// 添加图片
+const addImage = (): void => {
+  emit('add-image', true)
+}
+
 onMounted(() => {
   window.addEventListener('resize', handleResize)
   updateMaxScrollPosition()
@@ -293,6 +297,10 @@ onBeforeUnmount(() => {
   clip-path: inset(0 0 0 0); /* 初始状态：完全显示 */
 }
 
+.original-image:not(.hide-original) img {
+  transition: none;
+}
+
 .original-image {
   z-index: 2;
 }
@@ -304,9 +312,9 @@ onBeforeUnmount(() => {
 .processed-image {
   z-index: 1;
   opacity: 0;
-  transition: all 1.2s ease; /* 延长动画时间，与原始图片保持一致 */
   img {
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==');
+    // background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAClJREFUOE9jZGBg+M+AH5jgk2YcNYBhmISBMYF0cIZQOhg1gIFhiIcBAHBaEaElKspWAAAAAElFTkSuQmCC');
   }
 }
 
@@ -377,19 +385,25 @@ onBeforeUnmount(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
+  background: linear-gradient(257deg, rgba(102, 218, 255, 0.1) 0%, rgba(78, 110, 242, 0.1) 100%);
 
-  &:hover {
-    border-color: #aaa;
+  &.add-icon {
+    border: 1px solid var(--color-theme-2);
+    background: linear-gradient(257deg, rgba(102, 218, 255, 0.1) 0%, rgba(78, 110, 242, 0.1) 100%);
   }
 
   &.active {
-    border-color: #1890ff;
+    border: 1px solid var(--color-theme-2);
   }
 
   img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+  }
+
+  .icon-plus {
+    font-size: 24px;
   }
 }
 
@@ -428,5 +442,9 @@ onBeforeUnmount(() => {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.dark :deep(.processed-image img) {
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAClJREFUOE9jZGBg+M+AH5jgk2YcNYBhmISBMYF0cIZQOhg1gIFhiIcBAHBaEaElKspWAAAAAElFTkSuQmCC');
 }
 </style>

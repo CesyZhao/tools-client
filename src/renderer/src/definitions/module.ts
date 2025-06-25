@@ -4,6 +4,7 @@ export interface ProcessResponse {
 }
 
 export interface IProcessedImage {
+  id: string
   originalImage: File
   processedImage?: File
 }
