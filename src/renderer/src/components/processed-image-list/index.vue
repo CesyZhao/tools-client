@@ -1,5 +1,13 @@
 <template>
   <div class="image-wrapper">
+    <div v-if="image.processedImage" class="tools">
+      <i class="iconfont icon-suoxiao"></i>
+      <i class="iconfont icon-fangda"></i>
+      <i class="iconfont icon-ico-quchubeijing"></i>
+      <i class="iconfont icon-undo"></i>
+      <i class="iconfont icon-redo"></i>
+      <i class="iconfont icon-download"></i>
+    </div>
     <div ref="containerRef" class="image-container">
       <!-- 原始图片 -->
       <div
@@ -267,7 +275,7 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden; /* 确保超出容器的内容不可见 */
   width: 100%;
-  height: calc(100% - 180px); /* 减去列表高度 */
+  height: calc(100% - 100px); /* 减去列表高度 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -312,10 +320,7 @@ onBeforeUnmount(() => {
 .processed-image {
   z-index: 1;
   opacity: 0;
-  img {
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==');
-    // background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAClJREFUOE9jZGBg+M+AH5jgk2YcNYBhmISBMYF0cIZQOhg1gIFhiIcBAHBaEaElKspWAAAAAElFTkSuQmCC');
-  }
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==');
 }
 
 .processed-image.show-processed {
@@ -351,13 +356,13 @@ onBeforeUnmount(() => {
   align-items: center;
   width: 80%;
   max-width: 80%;
-  height: 180px;
+  height: 64px;
   margin-top: 10px;
 }
 
 .processed-images-list {
   width: 100%;
-  height: 80px;
+  height: 64px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -374,8 +379,8 @@ onBeforeUnmount(() => {
 }
 
 .processed-image-item {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   margin-right: 10px;
   display: flex;
   justify-content: center;
@@ -446,5 +451,16 @@ onBeforeUnmount(() => {
 
 .dark :deep(.processed-image img) {
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAClJREFUOE9jZGBg+M+AH5jgk2YcNYBhmISBMYF0cIZQOhg1gIFhiIcBAHBaEaElKspWAAAAAElFTkSuQmCC');
+}
+
+.tools {
+  position: absolute;
+  right: 16px;
+  top: 8px;
+  z-index: 3;
+  i {
+    margin: 0 8px;
+    cursor: pointer;
+  }
 }
 </style>

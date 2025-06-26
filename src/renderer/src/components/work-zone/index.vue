@@ -37,7 +37,7 @@
           {{ $t('work-zone.button') }}
         </button>
       </div>
-      <ProcessedImage
+      <ProcessedImageList
         v-else
         :image="currentImage"
         :processed-images-list="processedImageList"
@@ -61,7 +61,7 @@
 import { onMounted, ref, watchEffect } from 'vue'
 import Processor from '@renderer/processor'
 import Bridge from '@renderer/ipc/Bridge'
-import ProcessedImage from '@renderer/components/image/index.vue'
+import ProcessedImageList from '@renderer/components/processed-image-list/index.vue'
 import { IProcessedImage } from '@renderer/definitions/module'
 import { getUUID } from '@renderer/utils/string'
 
