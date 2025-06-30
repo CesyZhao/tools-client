@@ -1,8 +1,8 @@
 <template>
   <div class="image-wrapper">
     <div v-if="image.processedImage" class="tools">
-      <i class="iconfont icon-suoxiao"></i>
-      <i class="iconfont icon-fangda"></i>
+      <i class="iconfont icon-suoxiao" @click="zoomOut"></i>
+      <i class="iconfont icon-fangda" @click="zoomIn"></i>
       <i class="iconfont icon-ico-quchubeijing"></i>
       <i class="iconfont icon-undo"></i>
       <i class="iconfont icon-redo"></i>
@@ -11,7 +11,7 @@
     <div ref="containerRef" class="image-container">
       <!-- 原始图片 -->
       <div
-        v-if="originalImageUrl"
+        v-if="originalImageUrl && !backgroundRemoved"
         class="original-image"
         :class="{ 'hide-original': processedImageUrl }"
         :style="imageStyle"
@@ -30,7 +30,15 @@
         :class="{ 'show-processed': processedImageUrl }"
         :style="imageStyle"
       >
-        <img :src="processedImageUrl" :alt="alt" />
+        <img
+          :src="processedImageUrl"
+          :alt="alt"
+          :style="imageScale"
+          draggable="false"
+          @mousedown="startDrag"
+          @mouseup="stopDrag"
+          @mousemove="drag"
+        />
       </div>
     </div>
 
@@ -175,12 +183,18 @@ const updateMaxScrollPosition = (): void => {
   }
 }
 
+const backgroundRemoved = ref(false)
+const currentScale = ref(1)
+
 // 监听图片变化
 watch(
   () => props.image,
   newImage => {
     // 释放之前的 URL
     clearObjectURLs()
+
+    backgroundRemoved.value = false
+    currentScale.value = 1
 
     // 创建新的 URL
     if (newImage.originalImage) {
@@ -189,6 +203,9 @@ watch(
 
     if (newImage.processedImage) {
       processedImageUrl.value = createObjectURL(newImage.processedImage)
+      setTimeout(() => {
+        backgroundRemoved.value = true
+      }, 2000)
     } else {
       processedImageUrl.value = ''
     }
@@ -248,6 +265,40 @@ const handleResize = (): void => {
 // 添加图片
 const addImage = (): void => {
   emit('add-image', true)
+}
+
+const currentPosition = ref({ x: 0, y: 0 })
+const isDragging = ref(false)
+
+const imageScale = computed(() => {
+  return {
+    transform: `scale(${currentScale.value})`,
+    ...currentPosition
+  }
+})
+
+const zoomOut = (): void => {
+  currentScale.value *= 0.9
+}
+
+const zoomIn = (): void => {
+  currentScale.value *= 1.1
+}
+
+const startDrag = (): void => {
+  isDragging.value = true
+}
+
+const stopDrag = (): void => {
+  isDragging.value = false
+}
+
+const drag = (event: MouseEvent): void => {
+  if (isDragging.value) {
+    const deltaX = event.clientX - currentPosition.value.x
+    const deltaY = event.clientY - currentPosition.value.y
+    currentPosition.value = { x: deltaX, y: deltaY }
+  }
 }
 
 onMounted(() => {
