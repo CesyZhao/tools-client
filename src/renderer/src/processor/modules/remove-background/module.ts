@@ -1,6 +1,7 @@
 import { RawImage } from '@huggingface/transformers'
 import { PretrainedConfig } from '@huggingface/transformers/types/configs'
 import AbstractModule from '../AbstractModule'
+import { ModelKey } from '@common/definitions/model'
 
 class RemoveBackgroundModule extends AbstractModule<string, Promise<boolean>> {
   static instance: RemoveBackgroundModule | null = null
@@ -8,13 +9,13 @@ class RemoveBackgroundModule extends AbstractModule<string, Promise<boolean>> {
 
   // 模型配置
   protected modelConfig = {
-    modelId: 'briaai/RMBG-1.4',
+    modelId: ModelKey.Briaai,
     config: { model_type: 'custom' } as PretrainedConfig
   }
 
   // 处理器配置
   protected processorConfig = {
-    modelId: 'briaai/RMBG-1.4',
+    modelId: ModelKey.Briaai,
     options: {
       do_normalize: true,
       do_pad: false,

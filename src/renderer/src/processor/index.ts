@@ -14,10 +14,10 @@ class Processor {
   modelMap!: typeof modelMap | typeof modelMapWebGPU
 
   constructor(localModelPath, enableWebGPU = false) {
-    env.allowLocalModels = true
-    env.allowRemoteModels = false
-    env.useBrowserCache = false
-    env.backends.onnx.wasm!.wasmPaths = '/src/assets/wasm/'
+    // env.allowLocalModels = true
+    // env.allowRemoteModels = false
+    // env.useBrowserCache = false
+    // env.backends.onnx.wasm!.wasmPaths = '/src/assets/wasm/'
     // env.localModelPath = localModelPath
 
     this.modelMap = enableWebGPU ? modelMapWebGPU : modelMap

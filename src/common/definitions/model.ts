@@ -2,7 +2,8 @@ import { MenuKey } from './menu'
 
 export enum ModelKey {
   Briaai = 'briaai/RMBG-1.4',
-  Xenova = 'Xenova/modnet'
+  Xenova = 'Xenova/modnet',
+  Janus = 'onnx-community/Janus-Pro-1B-ONNX'
 }
 
 export const MenuModelMap = new Map<MenuKey, ModelKey[]>([

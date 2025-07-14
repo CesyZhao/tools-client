@@ -1,7 +1,7 @@
 import { RawImage } from '@huggingface/transformers'
 import { PretrainedConfig } from '@huggingface/transformers/types/configs'
 import AbstractModule from '../AbstractModule'
-import { DeviceType } from 'src/common/definitions/model'
+import { DeviceType, ModelKey } from '@common/definitions/model'
 
 class RemoveBackgroundModuleWebGPU extends AbstractModule<Blob, Promise<unknown>> {
   static instance: RemoveBackgroundModuleWebGPU | null = null
@@ -9,7 +9,7 @@ class RemoveBackgroundModuleWebGPU extends AbstractModule<Blob, Promise<unknown>
 
   // 模型配置
   protected modelConfig = {
-    modelId: 'Xenova/modnet',
+    modelId: ModelKey.Xenova,
     device: 'webgpu' as DeviceType,
     config: {
       model_type: 'modnet',
@@ -19,7 +19,7 @@ class RemoveBackgroundModuleWebGPU extends AbstractModule<Blob, Promise<unknown>
 
   // 处理器配置
   protected processorConfig = {
-    modelId: 'Xenova/modnet'
+    modelId: ModelKey.Xenova
   }
 
   static getInstance(): RemoveBackgroundModuleWebGPU {
